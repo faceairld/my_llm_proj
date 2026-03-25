@@ -1,0 +1,5 @@
+使用scaled_dot_product_attention：吞吐量基线: 36.36 tokens/s (耗时: 1.3753s)
+在wsl上跑：生成nsys报告时：吞吐量基线: 30.94 tokens/s (耗时: 1.6159s)，不生成报告时： 吞吐量基线: 36.78 tokens/s (耗时: 1.3595s)
+vllm: vLLM:158.53 tokens/s
+自己手写decode attention算子：吞吐量基线: 37.21 tokens/s (耗时: 1.3437s)
+设置cuda graph：吞吐量基线: 70.65 tokens/s (耗时: 0.7078s)
