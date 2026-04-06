@@ -117,7 +117,7 @@ if __name__ == "__main__":
     load_weights_from_safetensors(model, local_model_path)
     tokenizer = AutoTokenizer.from_pretrained(local_model_path)
     
-    prompt = "请详细分析一下人工智能在未来十年的发展趋势，并给出三个具体的应用场景。"
+    prompt = "请详细分析一下人工智能在未来十年的发展趋势，并给出三个具体的应用场景。" * 15
     text = tokenizer.apply_chat_template([{"role": "user", "content": prompt}], tokenize=False, add_generation_prompt=True)
     input_ids = tokenizer(text, return_tensors="pt").input_ids.to(device)
     
@@ -164,7 +164,7 @@ if __name__ == "__main__":
     with emit_nvtx():
         with record_function("Profile_CUDAGraph"):
             _ = benchmark_generate(model, input_ids, max_seq_len=5,
-                                   phase_name="Profile", use_graph=True)
+                                   phase_name="Profile", graph_use=True)
             torch.cuda.synchronize()
     
     torch.cuda.cudart().cudaProfilerStop()

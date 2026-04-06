@@ -28,12 +28,11 @@ __global__ void rms_kernel(
         data_in = sum[threadIdx.x];
     else
         data_in = 0.0;
-    
     for(int i = 16; i > 0 ; i = i>>1){
         data_in += __shfl_down_sync(0xffff'ffff, data_in, i, 32);
     }
     // data_in = __shfl_sync(0xffff'ffff, data_in, 0, 32);
-
+    //__syncthread();
     // if(threadIdx.x % 32 == 0)
     //     sum[warp_idx] = data_in;
     // __syncthreads();

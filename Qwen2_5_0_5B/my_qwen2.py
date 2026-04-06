@@ -5,10 +5,13 @@ import torch.nn.functional as F
 import torch.cuda.nvtx as nvtx
 from torch.utils.cpp_extension import load
 import os
+os.environ['CUDA_LAUNCH_BLOCKING'] = '1'
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 cu_file_path = os.path.join(current_dir, "csrc", "rmsnorm_kernel.cu")
 my_attention_path = os.path.join(current_dir,"csrc", "my_decode_attention.cu")
+my_flash_attention_path = os.path.join(current_dir,"csrc","my_flash_attention.cu")
+my_flash_attention_path_v2 = os.path.join(current_dir,"csrc","my_flash_attention_v2.cu")
 
 custom_rmsnorm_cuda = load(
     name = "my_rmsnorm_cuda",
@@ -22,6 +25,17 @@ custom_attention_cuda = load(
     verbose=True
 )
 
+custom_flash_attention_cuda = load(
+    name="flash_attention_cuda",
+    sources=[my_flash_attention_path],
+    verbose=True
+)
+
+custom_flash_attention_cuda_v2 = load(
+    name="flash_attention_cuda_v2",
+    sources=[my_flash_attention_path_v2],
+    verbose=True
+)
 
 
 
@@ -221,8 +235,10 @@ class MyQwenAttention(nn.Module):
 
         """
         if q_after_emb.size(2) > 1:
+            
             k_calculate = self.k_cache[:,:,:current_seq_len,:]
             v_calculate = self.v_cache[:,:,:current_seq_len,:]
+            """"
             k_extend = k_calculate.repeat_interleave(repeats=7, dim=1)
             v_extend = v_calculate.repeat_interleave(repeats=7, dim=1)
             attention = F.scaled_dot_product_attention(
@@ -234,6 +250,10 @@ class MyQwenAttention(nn.Module):
                 is_causal= True 
 
             )
+            
+            """
+            attention = custom_flash_attention_cuda_v2.forward(q_after_emb.contiguous(), k_calculate.contiguous(), v_calculate.contiguous())
+            
         else:
             attention = custom_attention_cuda.forward(self.k_cache, self.v_cache, q_after_emb.contiguous(), seq_len_t)
 
@@ -334,7 +354,8 @@ class Qwen2Model(nn.Module):
                 current_seq_len: int | None
                 )->torch.Tensor:
         nvtx.range_push("top_Model")
-        # self.seq_len_t.fill_(current_seq_len)
+        if current_seq_len is not None:
+            self.seq_len_t.fill_(current_seq_len)
         emb_data = self.emb_weight(x)
         cos, sin = self.RoPE_factor_gen(position_num)
         for decoder_layer in self.model_list[:24]:

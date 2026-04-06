@@ -3,3 +3,5 @@
 vllm: vLLM:158.53 tokens/s
 自己手写decode attention算子：吞吐量基线: 37.21 tokens/s (耗时: 1.3437s)
 设置cuda graph：吞吐量基线: 70.65 tokens/s (耗时: 0.7078s)
+设置了prefill阶段的flash attention cuda算子注入：吞吐量基线: 78.83 tokens/s (耗时: 0.5626s)
+设置了prefill阶段的flash attention cuda v2算子注入（单warp执行QK优化了读写shared mem）：吞吐量基线: 82.41 tokens/s (耗时: 0.6068s)
