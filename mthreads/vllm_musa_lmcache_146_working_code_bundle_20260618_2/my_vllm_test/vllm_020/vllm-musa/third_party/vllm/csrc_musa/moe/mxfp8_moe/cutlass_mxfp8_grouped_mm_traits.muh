@@ -1,0 +1,127 @@
+// SPDX-License-Identifier: Apache-2.0
+// SPDX-FileCopyrightText: Copyright contributors to the vLLM project
+// Adapted from SGLang:
+// https://github.com/sgl-project/sglang/blob/ded068a76e00878881d52d5bfb791e0f60d7311b/sgl-kernel/csrc/expert_specialization/es_sm100_mxfp8_blockscaled_traits.cuh
+
+#pragma once
+
+// Misc
+#include "cute/tensor.hpp"
+#include "mutlass/arch/arch.h"
+#include "mutlass/arch/mma.h"
+#include "mutlass/mutlass.h"
+#include "mutlass/detail/sm100_blockscaled_layout.hpp"
+#include "mutlass/epilogue/dispatch_policy.hpp"
+#include "mutlass/gemm/dispatch_policy.hpp"
+#include "mutlass/gemm/group_array_problem_shape.hpp"
+#include "mutlass/layout/layout.h"
+#include "mutlass/numeric_conversion.h"
+#include "mutlass/numeric_size.h"
+
+// Collective Builder
+#include "mutlass/epilogue/collective/collective_builder.hpp"
+#include "mutlass/epilogue/fusion/sm90_callbacks_tma_warpspecialized.hpp"
+#include "mutlass/epilogue/thread/activation.h"
+#include "mutlass/gemm/collective/collective_builder.hpp"
+
+// Integration
+#include "mutlass/gemm/device/gemm_universal_adapter.h"
+#include "mutlass/gemm/kernel/gemm_universal.hpp"
+
+namespace expert_specialization {
+
+using namespace cute;
+
+// Different configs for 1SM and 2SM MMA kernel
+struct MMA1SMConfig {
+  using MmaTileShape = Shape<_128, _128, _128>;
+  using KernelSchedule =
+      mutlass::gemm::KernelPtrArrayTmaWarpSpecialized1SmMxf8f6f4Sm100;
+  using EpilogueSchedule = mutlass::epilogue::PtrArrayTmaWarpSpecialized1Sm;
+  const static dim3 preferred_cluster;
+  const static dim3 fallback_cluster;
+};
+const dim3 MMA1SMConfig::preferred_cluster(1, 4, 1);
+const dim3 MMA1SMConfig::fallback_cluster(1, 2, 1);
+
+template <typename _MMAConfig, typename OutputDtype>
+struct CutlassMxfp8GroupedMmGemmTraits {
+  using MMAConfig = _MMAConfig;
+  using ElementInput = mutlass::float_e4m3_t;
+  using ElementOutput = OutputDtype;
+  using ProblemShape = mutlass::gemm::GroupProblemShape<Shape<int, int, int>>;
+
+  // A matrix configuration
+  using ElementA = mutlass::mx_float8_t<ElementInput>;
+  using LayoutA = mutlass::layout::RowMajor;
+  constexpr static int AlignmentA = 32;
+
+  // B matrix configuration
+  using ElementB = mutlass::mx_float8_t<ElementInput>;
+  using LayoutB = mutlass::layout::ColumnMajor;
+  constexpr static int AlignmentB = 32;
+
+  // C/D matrix configuration
+  using ElementC = void;
+  using ElementD = ElementOutput;
+  using LayoutC = mutlass::layout::RowMajor;
+  using LayoutD = mutlass::layout::RowMajor;
+  constexpr static int AlignmentC = 128 / mutlass::sizeof_bits<ElementD>::value;
+  constexpr static int AlignmentD = 128 / mutlass::sizeof_bits<ElementD>::value;
+  using ElementAccumulator = float;
+
+  static constexpr auto RoundStyle = mutlass::FloatRoundStyle::round_to_nearest;
+  using CustomEVTIdentity =  // acc
+      mutlass::epilogue::fusion::Sm90EVT<
+          mutlass::epilogue::fusion::Sm90Compute<
+              mutlass::epilogue::thread::Identity, ElementD, ElementAccumulator,
+              RoundStyle>,
+          mutlass::epilogue::fusion::Sm90AccFetch>;
+
+  // Core kernel configurations
+  using ArchTag = mutlass::arch::Sm100;
+  using OperatorClass = mutlass::arch::OpClassBlockScaledTensorOp;
+  using StageCountType = mutlass::gemm::collective::StageCountAuto;
+
+  // Runtime Cluster Shape
+  using ClusterShape = Shape<int32_t, int32_t, _1>;
+
+  // Define Epilogue
+  using CollectiveEpilogue =
+      typename mutlass::epilogue::collective::CollectiveBuilder<
+          ArchTag, OperatorClass, typename MMAConfig::MmaTileShape,
+          ClusterShape, Shape<_64, _64>, ElementAccumulator, ElementAccumulator,
+          ElementC, LayoutC*, AlignmentC, ElementD, LayoutD*, AlignmentD,
+          typename MMAConfig::EpilogueSchedule,
+          CustomEVTIdentity>::CollectiveOp;
+
+  // Define Mainloop
+  using CollectiveMainloop =
+      typename mutlass::gemm::collective::CollectiveBuilder<
+          ArchTag, OperatorClass, ElementA, LayoutA*, AlignmentA, ElementB,
+          LayoutB*, AlignmentB, ElementAccumulator,
+          typename MMAConfig::MmaTileShape, ClusterShape,
+          mutlass::gemm::collective::StageCountAutoCarveout<static_cast<int>(
+              sizeof(typename CollectiveEpilogue::SharedStorage))>,
+          typename MMAConfig::KernelSchedule>::CollectiveOp;
+
+  // Define GemmKernel
+  using GemmKernel =
+      mutlass::gemm::kernel::GemmUniversal<ProblemShape, CollectiveMainloop,
+                                           CollectiveEpilogue>;
+  using Gemm = mutlass::gemm::device::GemmUniversalAdapter<GemmKernel>;
+
+  using ElementSF = typename Gemm::GemmKernel::ElementSF;
+  using StrideA = typename Gemm::GemmKernel::InternalStrideA;
+  using StrideB = typename Gemm::GemmKernel::InternalStrideB;
+  using StrideC = typename Gemm::GemmKernel::InternalStrideC;
+  using StrideD = typename Gemm::GemmKernel::InternalStrideD;
+  using LayoutSFA =
+      typename Gemm::GemmKernel::CollectiveMainloop::InternalLayoutSFA;
+  using LayoutSFB =
+      typename Gemm::GemmKernel::CollectiveMainloop::InternalLayoutSFB;
+  using Sm1xxBlkScaledConfig =
+      typename Gemm::GemmKernel::CollectiveMainloop::Sm1xxBlkScaledConfig;
+};
+
+}  // namespace expert_specialization

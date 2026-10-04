@@ -1,0 +1,220 @@
+2026-06-17 07:41:39 | __init__ | 140088655799424 | INFO : Available plugins for group vllm.platform_plugins:
+2026-06-17 07:41:39 | __init__ | 140088655799424 | INFO : - musa -> vllm_musa:musa_platform_plugin
+2026-06-17 07:41:39 | __init__ | 140088655799424 | INFO : All plugins in this group will be loaded. Set `VLLM_PLUGINS` to control which plugins to load.
+2026-06-17 07:41:39 | __init__ | 140088655799424 | ERROR : Failed to load plugin musa
+Traceback (most recent call last):
+  File "/root/.virtualenvs/sglang-0.5.6/lib/python3.10/site-packages/vllm/plugins/__init__.py", line 61, in load_plugins_by_group
+    func = plugin.load()
+  File "/usr/lib/python3.10/importlib/metadata/__init__.py", line 173, in load
+    return functools.reduce(getattr, attrs, module)
+AttributeError: partially initialized module 'vllm_musa' has no attribute 'musa_platform_plugin' (most likely due to a circular import)
+2026-06-17 07:41:39 | template_heuristics | 140088655799424 | INFO : MUSA-0087: Inductor template heuristic registration is default-off (Eagle3 draft compile crash on TP=8 M2.5). Set VLLM_MUSA_ENABLE_INDUCTOR_HEURISTICS=1 to opt in for non-Eagle3 workloads.
+2026-06-17 07:41:39 | __init__ | 140088655799424 | INFO : Platform plugin musa is activated
+WARNING:vllm_musa:MUSA-0087: failed to register Inductor template heuristics for MUSA (cannot import name 'is_local_first_rank' from partially initialized module 'vllm.distributed.parallel_state' (most likely due to a circular import) (/root/.virtualenvs/sglang-0.5.6/lib/python3.10/site-packages/vllm/distributed/parallel_state.py)); falling back to ATen path for compiled `mm` ops.
+2026-06-17 07:41:54 | __init__ | 139949064447104 | WARNING : MUSA-0087: failed to register Inductor template heuristics for MUSA (cannot import name 'is_local_first_rank' from partially initialized module 'vllm.distributed.parallel_state' (most likely due to a circular import) (/root/.virtualenvs/sglang-0.5.6/lib/python3.10/site-packages/vllm/distributed/parallel_state.py)); falling back to ATen path for compiled `mm` ops.
+INFO:vllm.platforms:Platform plugin musa is activated
+2026-06-17 07:41:54 | __init__ | 139949064447104 | INFO : Platform plugin musa is activated
+INFO:patch_config:MUSA-0109: VLLM_MUSA_DRAFT_COPY_DEFAULT_STREAM=0; draft_token_ids_copy_stream stays on a dedicated stream (default vllm)
+2026-06-17 07:41:56 | vllm__v1__worker__gpu_model_runner.patch | 139949064447104 | INFO : MUSA-0109: VLLM_MUSA_DRAFT_COPY_DEFAULT_STREAM=0; draft_token_ids_copy_stream stays on a dedicated stream (default vllm)
+WARNING:vllm.distributed.nixl_utils:NIXL is not available
+2026-06-17 07:41:56 | nixl_utils | 139949064447104 | WARNING : NIXL is not available
+WARNING:vllm.distributed.nixl_utils:NIXL agent config is not available
+2026-06-17 07:41:56 | nixl_utils | 139949064447104 | WARNING : NIXL agent config is not available
+INFO:patch_config:MUSA-0090: EagleProposer.propose monkey-patched (dispatcher installed; runner lazy-inits on first MUSA call)
+2026-06-17 07:41:56 | vllm__v1__spec_decode__eagle.patch | 139949064447104 | INFO : MUSA-0090: EagleProposer.propose monkey-patched (dispatcher installed; runner lazy-inits on first MUSA call)
+INFO:patch_config:MUSA-0109 POC: VLLM_MUSA_TREE_GRAPH_CAPTURE != 1; tree propose graph capture is disabled (using vllm's iterative path).
+2026-06-17 07:41:56 | vllm__v1__spec_decode__llm_base_proposer.patch | 139949064447104 | INFO : MUSA-0109 POC: VLLM_MUSA_TREE_GRAPH_CAPTURE != 1; tree propose graph capture is disabled (using vllm's iterative path).
+INFO:vllm_musa:MUSA patches and custom ops registered
+2026-06-17 07:41:56 | __init__ | 139949064447104 | INFO : MUSA patches and custom ops registered
+INFO:vllm.v1.engine.core:Initializing a V1 LLM engine (v0.20.1.dev0+g88d34c640.d20260519) with config: model='/data/SQT-v1.0.5-test/models/qwen3-8b', speculative_config=None, tokenizer='/data/SQT-v1.0.5-test/models/qwen3-8b', skip_tokenizer_init=False, tokenizer_mode=auto, revision=None, tokenizer_revision=None, trust_remote_code=True, dtype=torch.bfloat16, max_seq_len=4096, download_dir=None, load_format=auto, tensor_parallel_size=1, pipeline_parallel_size=1, data_parallel_size=1, decode_context_parallel_size=1, dcp_comm_backend=ag_rs, disable_custom_all_reduce=False, quantization=None, quantization_config=None, enforce_eager=False, enable_return_routed_experts=False, kv_cache_dtype=auto, device_config=musa, structured_outputs_config=StructuredOutputsConfig(backend='auto', disable_any_whitespace=False, disable_additional_properties=False, reasoning_parser='', reasoning_parser_plugin='', enable_in_reasoning=False), observability_config=ObservabilityConfig(show_hidden_metrics_for_version=None, otlp_traces_endpoint=None, collect_detailed_traces=None, kv_cache_metrics=False, kv_cache_metrics_sample=0.01, cudagraph_metrics=False, enable_layerwise_nvtx_tracing=False, enable_mfu_metrics=False, enable_mm_processor_stats=False, enable_logging_iteration_details=False), seed=0, served_model_name=qwen3-8b-lmcache, enable_prefix_caching=True, enable_chunked_prefill=True, pooler_config=None, compilation_config={'mode': <CompilationMode.VLLM_COMPILE: 3>, 'debug_dump_path': None, 'cache_dir': '', 'compile_cache_save_format': 'binary', 'backend': 'inductor', 'custom_ops': ['all'], 'ir_enable_torch_wrap': True, 'splitting_ops': ['vllm::unified_attention_with_output', 'vllm::unified_mla_attention_with_output', 'vllm::mamba_mixer2', 'vllm::mamba_mixer', 'vllm::short_conv', 'vllm::linear_attention', 'vllm::plamo2_mamba_mixer', 'vllm::gdn_attention_core', 'vllm::gdn_attention_core_xpu', 'vllm::olmo_hybrid_gdn_full_forward', 'vllm::kda_attention', 'vllm::sparse_attn_indexer', 'vllm::rocm_aiter_sparse_attn_indexer', 'vllm::deepseek_v4_attention', 'vllm::unified_kv_cache_update', 'vllm::unified_mla_kv_cache_update'], 'compile_mm_encoder': False, 'cudagraph_mm_encoder': False, 'encoder_cudagraph_token_budgets': [], 'encoder_cudagraph_max_vision_items_per_batch': 0, 'encoder_cudagraph_max_frames_per_batch': None, 'compile_sizes': [], 'compile_ranges_endpoints': [8192], 'inductor_compile_config': {'enable_auto_functionalized_v2': False, 'size_asserts': False, 'alignment_asserts': False, 'scalar_asserts': False, 'combo_kernels': True, 'benchmark_combo_kernel': True}, 'inductor_passes': {}, 'cudagraph_mode': <CUDAGraphMode.FULL_AND_PIECEWISE: (2, 1)>, 'cudagraph_num_of_warmups': 1, 'cudagraph_capture_sizes': [1, 2, 3, 4, 5, 6, 7, 8], 'cudagraph_copy_inputs': False, 'cudagraph_specialize_lora': True, 'use_inductor_graph_partition': False, 'pass_config': {'fuse_norm_quant': True, 'fuse_act_quant': True, 'fuse_attn_quant': False, 'enable_sp': False, 'fuse_gemm_comms': False, 'fuse_allreduce_rms': False}, 'max_cudagraph_capture_size': 8, 'dynamic_shapes_config': {'type': <DynamicShapesType.BACKED: 'backed'>, 'evaluate_guards': False, 'assume_32_bit_indexing': False}, 'local_cache_dir': None, 'fast_moe_cold_start': True, 'static_all_moe_layers': []}, kernel_config=KernelConfig(ir_op_priority=IrOpPriorityConfig(rms_norm=['native']), enable_flashinfer_autotune=True, moe_backend='auto')
+2026-06-17 07:41:56 | core | 139949064447104 | INFO : Initializing a V1 LLM engine (v0.20.1.dev0+g88d34c640.d20260519) with config: model='/data/SQT-v1.0.5-test/models/qwen3-8b', speculative_config=None, tokenizer='/data/SQT-v1.0.5-test/models/qwen3-8b', skip_tokenizer_init=False, tokenizer_mode=auto, revision=None, tokenizer_revision=None, trust_remote_code=True, dtype=torch.bfloat16, max_seq_len=4096, download_dir=None, load_format=auto, tensor_parallel_size=1, pipeline_parallel_size=1, data_parallel_size=1, decode_context_parallel_size=1, dcp_comm_backend=ag_rs, disable_custom_all_reduce=False, quantization=None, quantization_config=None, enforce_eager=False, enable_return_routed_experts=False, kv_cache_dtype=auto, device_config=musa, structured_outputs_config=StructuredOutputsConfig(backend='auto', disable_any_whitespace=False, disable_additional_properties=False, reasoning_parser='', reasoning_parser_plugin='', enable_in_reasoning=False), observability_config=ObservabilityConfig(show_hidden_metrics_for_version=None, otlp_traces_endpoint=None, collect_detailed_traces=None, kv_cache_metrics=False, kv_cache_metrics_sample=0.01, cudagraph_metrics=False, enable_layerwise_nvtx_tracing=False, enable_mfu_metrics=False, enable_mm_processor_stats=False, enable_logging_iteration_details=False), seed=0, served_model_name=qwen3-8b-lmcache, enable_prefix_caching=True, enable_chunked_prefill=True, pooler_config=None, compilation_config={'mode': <CompilationMode.VLLM_COMPILE: 3>, 'debug_dump_path': None, 'cache_dir': '', 'compile_cache_save_format': 'binary', 'backend': 'inductor', 'custom_ops': ['all'], 'ir_enable_torch_wrap': True, 'splitting_ops': ['vllm::unified_attention_with_output', 'vllm::unified_mla_attention_with_output', 'vllm::mamba_mixer2', 'vllm::mamba_mixer', 'vllm::short_conv', 'vllm::linear_attention', 'vllm::plamo2_mamba_mixer', 'vllm::gdn_attention_core', 'vllm::gdn_attention_core_xpu', 'vllm::olmo_hybrid_gdn_full_forward', 'vllm::kda_attention', 'vllm::sparse_attn_indexer', 'vllm::rocm_aiter_sparse_attn_indexer', 'vllm::deepseek_v4_attention', 'vllm::unified_kv_cache_update', 'vllm::unified_mla_kv_cache_update'], 'compile_mm_encoder': False, 'cudagraph_mm_encoder': False, 'encoder_cudagraph_token_budgets': [], 'encoder_cudagraph_max_vision_items_per_batch': 0, 'encoder_cudagraph_max_frames_per_batch': None, 'compile_sizes': [], 'compile_ranges_endpoints': [8192], 'inductor_compile_config': {'enable_auto_functionalized_v2': False, 'size_asserts': False, 'alignment_asserts': False, 'scalar_asserts': False, 'combo_kernels': True, 'benchmark_combo_kernel': True}, 'inductor_passes': {}, 'cudagraph_mode': <CUDAGraphMode.FULL_AND_PIECEWISE: (2, 1)>, 'cudagraph_num_of_warmups': 1, 'cudagraph_capture_sizes': [1, 2, 3, 4, 5, 6, 7, 8], 'cudagraph_copy_inputs': False, 'cudagraph_specialize_lora': True, 'use_inductor_graph_partition': False, 'pass_config': {'fuse_norm_quant': True, 'fuse_act_quant': True, 'fuse_attn_quant': False, 'enable_sp': False, 'fuse_gemm_comms': False, 'fuse_allreduce_rms': False}, 'max_cudagraph_capture_size': 8, 'dynamic_shapes_config': {'type': <DynamicShapesType.BACKED: 'backed'>, 'evaluate_guards': False, 'assume_32_bit_indexing': False}, 'local_cache_dir': None, 'fast_moe_cold_start': True, 'static_all_moe_layers': []}, kernel_config=KernelConfig(ir_op_priority=IrOpPriorityConfig(rms_norm=['native']), enable_flashinfer_autotune=True, moe_backend='auto')
+WARNING:py.warnings:/usr/local/lib/python3.10/dist-packages/torch/__init__.py:1617: UserWarning: Please use the new API settings to control TF32 behavior, such as torch.backends.cudnn.conv.fp32_precision = 'tf32' or torch.backends.cuda.matmul.fp32_precision = 'ieee'. Old settings, e.g, torch.backends.cuda.matmul.allow_tf32 = True, torch.backends.cudnn.allow_tf32 = True, allowTF32CuDNN() and allowTF32CuBLAS() will be deprecated after Pytorch 2.9. Please see https://pytorch.org/docs/main/notes/cuda.html#tensorfloat-32-tf32-on-ampere-and-later-devices (Triggered internally at /home/pytorch/aten/src/ATen/Context.cpp:80.)
+  _C._set_float32_matmul_precision(precision)
+
+2026-06-17 07:41:57 | warnings | 139949064447104 | WARNING : /usr/local/lib/python3.10/dist-packages/torch/__init__.py:1617: UserWarning: Please use the new API settings to control TF32 behavior, such as torch.backends.cudnn.conv.fp32_precision = 'tf32' or torch.backends.cuda.matmul.fp32_precision = 'ieee'. Old settings, e.g, torch.backends.cuda.matmul.allow_tf32 = True, torch.backends.cudnn.allow_tf32 = True, allowTF32CuDNN() and allowTF32CuBLAS() will be deprecated after Pytorch 2.9. Please see https://pytorch.org/docs/main/notes/cuda.html#tensorfloat-32-tf32-on-ampere-and-later-devices (Triggered internally at /home/pytorch/aten/src/ATen/Context.cpp:80.)
+  _C._set_float32_matmul_precision(precision)
+
+INFO:vllm.distributed.parallel_state:world_size=1 rank=0 local_rank=0 distributed_init_method=tcp://10.10.142.146:56229 backend=mccl
+2026-06-17 07:41:57 | parallel_state | 139949064447104 | INFO : world_size=1 rank=0 local_rank=0 distributed_init_method=tcp://10.10.142.146:56229 backend=mccl
+INFO:vllm.distributed.parallel_state:rank 0 in world size 1 is assigned as DP rank 0, PP rank 0, PCP rank 0, TP rank 0, EP rank N/A, EPLB rank N/A
+2026-06-17 07:41:57 | parallel_state | 139949064447104 | INFO : rank 0 in world size 1 is assigned as DP rank 0, PP rank 0, PCP rank 0, TP rank 0, EP rank N/A, EPLB rank N/A
+INFO:vllm.v1.worker.gpu_model_runner:Starting to load model /data/SQT-v1.0.5-test/models/qwen3-8b...
+2026-06-17 07:42:00 | gpu_model_runner | 139949064447104 | INFO : Starting to load model /data/SQT-v1.0.5-test/models/qwen3-8b...
+INFO:vllm.v1.attention.backends.fa_utils:MUSA platform use FLASH_ATTN with version 3.
+2026-06-17 07:42:05 | fa_utils | 139949064447104 | INFO : MUSA platform use FLASH_ATTN with version 3.
+WARNING:vllm.v1.attention.ops.triton_decode_attention:The following error message 'operation scheduled before its operands' can be ignored.
+2026-06-17 07:42:05 | triton_decode_attention | 139949064447104 | WARNING : The following error message 'operation scheduled before its operands' can be ignored.
+INFO:vllm_musa.platform:Using FLASH_ATTN attention backend out of potential backends: ['FLASH_ATTN', 'TRITON_ATTN'].
+2026-06-17 07:42:05 | platform | 139949064447104 | INFO : Using FLASH_ATTN attention backend out of potential backends: ['FLASH_ATTN', 'TRITON_ATTN'].
+INFO:vllm_musa.v1.attention.backends.flash_attn:Using FlashAttention version 3
+2026-06-17 07:42:05 | flash_attn | 139949064447104 | INFO : Using FlashAttention version 3
+INFO:vllm.model_executor.model_loader.weight_utils:Filesystem type for checkpoints: EXT4. Checkpoint size: 15.26 GiB. Available RAM: 2215.82 GiB.
+2026-06-17 07:42:05 | weight_utils | 139949064447104 | INFO : Filesystem type for checkpoints: EXT4. Checkpoint size: 15.26 GiB. Available RAM: 2215.82 GiB.
+INFO:vllm.model_executor.model_loader.weight_utils:Auto-prefetch is disabled because the filesystem (EXT4) is not a recognized network FS (NFS/Lustre). If you want to force prefetching, start vLLM with --safetensors-load-strategy=prefetch.
+2026-06-17 07:42:05 | weight_utils | 139949064447104 | INFO : Auto-prefetch is disabled because the filesystem (EXT4) is not a recognized network FS (NFS/Lustre). If you want to force prefetching, start vLLM with --safetensors-load-strategy=prefetch.
+Loading safetensors checkpoint shards:   0% Completed | 0/5 [00:00<?, ?it/s]
+Loading safetensors checkpoint shards:  20% Completed | 1/5 [00:01<00:06,  1.55s/it]
+Loading safetensors checkpoint shards:  40% Completed | 2/5 [00:03<00:05,  1.74s/it]
+Loading safetensors checkpoint shards:  60% Completed | 3/5 [00:05<00:03,  1.73s/it]
+Loading safetensors checkpoint shards:  80% Completed | 4/5 [00:06<00:01,  1.62s/it]
+Loading safetensors checkpoint shards: 100% Completed | 5/5 [00:07<00:00,  1.22s/it]
+Loading safetensors checkpoint shards: 100% Completed | 5/5 [00:07<00:00,  1.42s/it]
+
+INFO:vllm.model_executor.model_loader.default_loader:Loading weights took 7.13 seconds
+2026-06-17 07:42:13 | default_loader | 139949064447104 | INFO : Loading weights took 7.13 seconds
+INFO:vllm.v1.worker.gpu_model_runner:Model loading took 15.27 GiB memory and 12.110650 seconds
+2026-06-17 07:42:13 | gpu_model_runner | 139949064447104 | INFO : Model loading took 15.27 GiB memory and 12.110650 seconds
+INFO:vllm.compilation.backends:vLLM's torch.compile cache is disabled.
+2026-06-17 07:42:23 | backends | 139949064447104 | INFO : vLLM's torch.compile cache is disabled.
+INFO:vllm.compilation.backends:Dynamo bytecode transform time: 8.91 s
+2026-06-17 07:42:23 | backends | 139949064447104 | INFO : Dynamo bytecode transform time: 8.91 s
+INFO:vllm.compilation.backends:Compiling a graph for compile range (1, 8192) takes 21.63 s
+2026-06-17 07:42:45 | backends | 139949064447104 | INFO : Compiling a graph for compile range (1, 8192) takes 21.63 s
+INFO:vllm.compilation.monitor:torch.compile and initial profiling/warmup run together took 36.15 s in total
+2026-06-17 07:42:50 | monitor | 139949064447104 | INFO : torch.compile and initial profiling/warmup run together took 36.15 s in total
+INFO:vllm.distributed.kv_transfer.kv_connector.utils:Connectors do not specify a kv cache layout, defaulting to NHD.
+2026-06-17 07:42:57 | utils | 139949064447104 | INFO : Connectors do not specify a kv cache layout, defaulting to NHD.
+INFO:vllm.v1.worker.gpu_model_runner:Profiling CUDA graph memory: PIECEWISE=8 (largest=8), FULL=8 (largest=8)
+2026-06-17 07:42:57 | gpu_model_runner | 139949064447104 | INFO : Profiling CUDA graph memory: PIECEWISE=8 (largest=8), FULL=8 (largest=8)
+INFO:vllm.v1.worker.gpu_model_runner:Estimated CUDA graph memory: 1.19 GiB total
+2026-06-17 07:43:13 | gpu_model_runner | 139949064447104 | INFO : Estimated CUDA graph memory: 1.19 GiB total
+INFO:vllm.v1.worker.gpu_worker:Available KV cache memory: 29.76 GiB
+2026-06-17 07:43:14 | gpu_worker | 139949064447104 | INFO : Available KV cache memory: 29.76 GiB
+INFO:vllm.v1.worker.gpu_worker:CUDA graph memory profiling is enabled (default since v0.21.0). The current --gpu-memory-utilization=0.6500 is equivalent to --gpu-memory-utilization=0.6351 without CUDA graph memory profiling. To maintain the same effective KV cache size as before, increase --gpu-memory-utilization to 0.6649. To disable, set VLLM_MEMORY_PROFILER_ESTIMATE_CUDAGRAPHS=0.
+2026-06-17 07:43:14 | gpu_worker | 139949064447104 | INFO : CUDA graph memory profiling is enabled (default since v0.21.0). The current --gpu-memory-utilization=0.6500 is equivalent to --gpu-memory-utilization=0.6351 without CUDA graph memory profiling. To maintain the same effective KV cache size as before, increase --gpu-memory-utilization to 0.6649. To disable, set VLLM_MEMORY_PROFILER_ESTIMATE_CUDAGRAPHS=0.
+INFO:vllm.v1.core.kv_cache_utils:GPU KV cache size: 216,704 tokens
+2026-06-17 07:43:14 | kv_cache_utils | 139949064447104 | INFO : GPU KV cache size: 216,704 tokens
+INFO:vllm.v1.core.kv_cache_utils:Maximum concurrency for 4,096 tokens per request: 52.91x
+2026-06-17 07:43:14 | kv_cache_utils | 139949064447104 | INFO : Maximum concurrency for 4,096 tokens per request: 52.91x
+INFO:vllm.distributed.kv_transfer.kv_connector.factory:Creating v1 connector with name: LMCacheConnectorV1 and engine_id: e18e7b29-ce93-43dc-99b9-ed255813789b
+2026-06-17 07:43:14 | factory | 139949064447104 | INFO : Creating v1 connector with name: LMCacheConnectorV1 and engine_id: e18e7b29-ce93-43dc-99b9-ed255813789b
+WARNING:vllm.distributed.kv_transfer.kv_connector.v1.base:Initializing KVConnectorBase_V1. This API is experimental and subject to change in the future as we iterate the design.
+2026-06-17 07:43:14 | base | 139949064447104 | WARNING : Initializing KVConnectorBase_V1. This API is experimental and subject to change in the future as we iterate the design.
+INFO:vllm.distributed.kv_transfer.kv_connector.v1.lmcache_connector:Initializing latest dev LMCache connector
+2026-06-17 07:43:14 | lmcache_connector | 139949064447104 | INFO : Initializing latest dev LMCache connector
+[33;20m[2026-06-17 07:43:14,339] LMCache WARNING:[0m No LMCache configuration file is set. Trying to read configurations from the environment variables. [3m(utils.py:56:lmcache.integration.vllm.utils)[0m
+[33;20m[2026-06-17 07:43:14,339] LMCache WARNING:[0m You can set the configuration file through the environment variable: LMCACHE_CONFIG_FILE [3m(utils.py:60:lmcache.integration.vllm.utils)[0m
+[32;20m[2026-06-17 07:43:14,339] LMCache INFO:[0m num_layer: 36, chunk_size: 256, num_kv_head (per gpu): 8, head_size: 128, hidden_dim (D) for KV (per gpu): 1024, use mla: False, kv shape: (36, 2, 256, 8, 128), num_draft_layers: 0 [3m(manager.py:334:lmcache.v1.manager)[0m
+[32;20m[2026-06-17 07:43:14,339] LMCache INFO:[0m CUDA device is available. Using CUDA for LMCache engine. [3m(utils.py:303:lmcache.integration.vllm.utils)[0m
+[32;20m[2026-06-17 07:43:14,340] LMCache INFO:[0m CUDA device is available. Using CUDA for LMCache engine. [3m(utils.py:303:lmcache.integration.vllm.utils)[0m
+[32;20m[2026-06-17 07:43:14,340] LMCache INFO:[0m Creating LMCacheEngine instance vllm-instance [3m(cache_engine.py:1923:lmcache.v1.cache_engine)[0m
+[32;20m[2026-06-17 07:43:14,340] LMCache INFO:[0m NUMA mapping for instance vllm-instance: None [3m(cache_engine.py:1926:lmcache.v1.cache_engine)[0m
+[33;20m[2026-06-17 07:43:14,340] LMCache WARNING:[0m Could not load 'builtin' from vLLM. Using builtin hash. This may cause inconsistencies in distributed caching. [3m(token_database.py:136:lmcache.v1.token_database)[0m
+[33;20m[2026-06-17 07:43:14,341] LMCache WARNING:[0m Using builtin hash without PYTHONHASHSEED set. For production environments (non-testing scenarios), you MUST set PYTHONHASHSEED to ensure consistent hashing across processes. Example: export PYTHONHASHSEED=0 [3m(token_database.py:143:lmcache.v1.token_database)[0m
+[32;20m[2026-06-17 07:43:14,341] LMCache INFO:[0m Initialized NONE_HASH=b"j\xb3\xe6*o/\x82d\xab\xbf'\xd66\x151\n\xd9\xda\t/\x89\x10!\x8a\xa2\xe5\x99G\x0c}\xbb\xb3" from vLLM (>= PR#20511) [3m(token_database.py:74:lmcache.v1.token_database)[0m
+[32;20m[2026-06-17 07:43:14,341] LMCache INFO:[0m Using hash algorithm: builtin [3m(token_database.py:84:lmcache.v1.token_database)[0m
+[32;20m[2026-06-17 07:43:14,344] LMCache INFO:[0m Creating LMCacheEngine with config: {'chunk_size': 256, 'local_cpu': True, 'max_local_cpu_size': 64.0, 'reserve_local_cpu_size': 0.0, 'local_disk': None, 'max_local_disk_size': 0.0, 'remote_url': None, 'remote_serde': 'naive', 'use_layerwise': False, 'save_decode_cache': False, 'pre_caching_hash_algorithm': 'builtin', 'enable_blending': False, 'blend_recompute_ratios': None, 'blend_thresholds': None, 'blend_check_layers': None, 'blend_min_tokens': 256, 'blend_special_str': ' # # ', 'enable_p2p': False, 'p2p_host': None, 'p2p_init_ports': None, 'p2p_lookup_ports': None, 'enable_controller': False, 'lmcache_instance_id': None, 'controller_pull_url': None, 'controller_reply_url': None, 'lmcache_worker_ports': None, 'lmcache_worker_ids': None, 'lmcache_worker_heartbeat_delay_time': 10, 'lmcache_worker_heartbeat_time': None, 'enable_pd': False, 'pd_role': None, 'pd_buffer_size': None, 'pd_buffer_device': None, 'pd_peer_host': None, 'pd_peer_init_port': None, 'pd_peer_alloc_port': None, 'pd_proxy_host': None, 'pd_proxy_port': None, 'transfer_channel': None, 'nixl_backends': None, 'nixl_buffer_size': None, 'nixl_buffer_device': None, 'gds_path': None, 'cufile_buffer_size': None, 'audit_actual_remote_url': None, 'internal_api_server_host': '0.0.0.0', 'extra_config': None, 'save_unfull_chunk': False, 'blocking_timeout_secs': 10, 'external_lookup_client': None, 'py_enable_gc': True, 'cache_policy': 'LRU', 'numa_mode': None, 'enable_async_loading': False, 'internal_api_server_enabled': False, 'internal_api_server_port_start': 6999, 'priority_limit': None, 'internal_api_server_include_index_list': None, 'internal_api_server_socket_path_prefix': None, 'runtime_plugin_locations': None, 'storage_plugins': None, 'remote_storage_plugins': None, 'lookup_timeout_ms': 3000, 'min_retrieve_tokens': 0, 'hit_miss_ratio': None, 'lookup_server_worker_ids': None, 'enable_scheduler_bypass_lookup': False, 'script_allowed_imports': None, 'enable_lazy_memory_allocator': False, 'lazy_memory_initial_ratio': 0.2, 'lazy_memory_expand_trigger_ratio': 0.5, 'lazy_memory_step_ratio': 0.1, 'lazy_memory_safe_size': 0.0, 'enable_chunk_statistics': False, 'chunk_statistics_auto_start_statistics': False, 'chunk_statistics_auto_exit_timeout_hours': 0.0, 'chunk_statistics_auto_exit_target_unique_chunks': 0, 'chunk_statistics_strategy': 'memory_bloom_filter', 'enable_kv_events': False, 'use_gpu_connector_v3': False, 'pin_timeout_sec': 300, 'pin_check_interval_sec': 30, 'remote_config_url': None, 'app_id': None} [3m(cache_engine.py:105:lmcache.v1.cache_engine)[0m
+[32;20m[2026-06-17 07:43:14,346] LMCache INFO:[0m LMCacheWorker is not initialized (related configs: enable_controller: False, role: worker, worker_id: 0, worker_ids: [0]). [3m(cache_engine.py:147:lmcache.v1.cache_engine)[0m
+[32;20m[2026-06-17 07:43:14,346] LMCache INFO:[0m KV events are disabled. [3m(cache_engine.py:176:lmcache.v1.cache_engine)[0m
+[32;20m[2026-06-17 07:43:14,346] LMCache INFO:[0m Initializing usage context. [3m(usage_context.py:412:lmcache.usage_context)[0m
+[32;20m[2026-06-17 07:43:16,082] LMCache INFO:[0m PeriodicThread PinMonitor-thread entering main loop (interval=30.0s) [3m(periodic_thread.py:279:lmcache.v1.periodic_thread)[0m
+[32;20m[2026-06-17 07:43:16,082] LMCache INFO:[0m Started PeriodicThread: PinMonitor-thread (level=critical, interval=30.0s, init_wait=0.0s) [3m(periodic_thread.py:239:lmcache.v1.periodic_thread)[0m
+[32;20m[2026-06-17 07:43:16,082] LMCache INFO:[0m PinMonitor started [3m(pin_monitor.py:212:lmcache.v1.pin_monitor)[0m
+[32;20m[2026-06-17 07:43:16,532] LMCache INFO:[0m lmcache lookup server started [3m(lmcache_lookup_client.py:259:lmcache.v1.lookup_client.lmcache_lookup_client)[0m
+[32;20m[2026-06-17 07:43:16,533] LMCache INFO:[0m Internal API server disabled. internal_api_server_enabled=False, port_offset=1, port=7000, socket_path=None, include_index_list=None [3m(api_server.py:58:lmcache.v1.internal_api_server.api_server)[0m
+[32;20m[2026-06-17 07:43:16,533] LMCache INFO:[0m LMCache initialized for role KVConnectorRole.WORKER with version 0.3.0-NA, vllm version 0.20.1.dev0+g88d34c640.d20260519, lmcache cache_engine metadata: LMCacheMetadata(model_name='/data/SQT-v1.0.5-test/models/qwen3-8b', world_size=1, local_world_size=1, worker_id=0, local_worker_id=0, kv_dtype=torch.bfloat16, kv_shape=(36, 2, 256, 8, 128), use_mla=False, role='worker', served_model_name='qwen3-8b-lmcache', chunk_size=256, kv_layer_groups_manager=KVLayerGroupsManager(kv_layer_groups=[]), engine_id='e18e7b29-ce93-43dc-99b9-ed255813789b', kv_connector_extra_config={}) [3m(vllm_v1_adapter.py:480:lmcache.integration.vllm.vllm_v1_adapter)[0m
+[32;20m[2026-06-17 07:43:16,664] LMCache INFO:[0m Registering KV caches [3m(vllm_v1_adapter.py:736:lmcache.integration.vllm.vllm_v1_adapter)[0m
+[32;20m[2026-06-17 07:43:16,664] LMCache INFO:[0m KV layer groups: [KVLayerGroupInfo(layers=36, indices=0-35, shape=torch.Size([2, 3386, 64, 8, 128]), dtype=torch.bfloat16)] [3m(kv_layer_groups.py:211:lmcache.v1.kv_layer_groups)[0m
+[32;20m[2026-06-17 07:43:16,664] LMCache INFO:[0m Post initializing LMCacheEngine [3m(cache_engine.py:279:lmcache.v1.cache_engine)[0m
+[32;20m[2026-06-17 07:43:16,664] LMCache INFO:[0m Initialize storage manager on rank 0, use layerwise: False,save only first rank: False [3m(cache_engine.py:291:lmcache.v1.cache_engine)[0m
+[32;20m[2026-06-17 07:43:16,665] LMCache INFO:[0m Initializing LRUCachePolicy [3m(lru.py:22:lmcache.v1.storage_backend.cache_policy.lru)[0m
+[32;20m[2026-06-17 07:43:16,665] LMCache INFO:[0m NUMA mapping None [3m(local_cpu_backend.py:370:lmcache.v1.storage_backend.local_cpu_backend)[0m
+[31;20m[2026-06-17 07:45:45,241] LMCache ERROR:[0m LMCacheEngine marked as init failed: musaHostAlloc failed: 205 [3m(cache_engine.py:273:lmcache.v1.cache_engine)[0m
+[31;20m[2026-06-17 07:45:45,241] LMCache ERROR:[0m Failed during post_init: musaHostAlloc failed: 205. System will operate in degraded mode (recompute). [3m(manager.py:486:lmcache.v1.manager)[0m
+Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):   0%|          | 0/8 [00:00<?, ?it/s]muDNN(v3105) 2026-06-17 07:45:45.953177 0d:0h:3m:57s TID=0x9296f44a0f8ba579 GPU=0 Handle=0x55babf9349c0 ERROR# EXECUTION_FAILED in Fill::Run, Reason:
+     musa runtime failed fill.mu:838: err 205 = mapping of buffer object failed
+
+Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):   0%|          | 0/8 [00:00<?, ?it/s]
+ERROR:vllm.v1.engine.core:EngineCore failed to start.
+Traceback (most recent call last):
+  File "/root/.virtualenvs/sglang-0.5.6/lib/python3.10/site-packages/vllm/v1/engine/core.py", line 1110, in run_engine_core
+    engine_core = EngineCoreProc(*args, engine_index=dp_rank, **kwargs)
+  File "/root/.virtualenvs/sglang-0.5.6/lib/python3.10/site-packages/vllm/v1/engine/core.py", line 876, in __init__
+    super().__init__(
+  File "/root/.virtualenvs/sglang-0.5.6/lib/python3.10/site-packages/vllm/v1/engine/core.py", line 128, in __init__
+    kv_cache_config = self._initialize_kv_caches(vllm_config)
+  File "/root/.virtualenvs/sglang-0.5.6/lib/python3.10/site-packages/vllm/v1/engine/core.py", line 283, in _initialize_kv_caches
+    self.model_executor.initialize_from_config(kv_cache_configs)
+  File "/root/.virtualenvs/sglang-0.5.6/lib/python3.10/site-packages/vllm/v1/executor/abstract.py", line 124, in initialize_from_config
+    compilation_times: list[CompilationTimes] = self.collective_rpc(
+  File "/root/.virtualenvs/sglang-0.5.6/lib/python3.10/site-packages/vllm/v1/executor/uniproc_executor.py", line 80, in collective_rpc
+    result = run_method(self.driver_worker, method, args, kwargs)
+  File "/root/.virtualenvs/sglang-0.5.6/lib/python3.10/site-packages/vllm/v1/serial_utils.py", line 510, in run_method
+    return func(*args, **kwargs)
+  File "/root/.virtualenvs/sglang-0.5.6/lib/python3.10/site-packages/vllm/v1/worker/gpu_worker.py", line 590, in compile_or_warm_up_model
+    cuda_graph_memory_bytes = self.model_runner.capture_model()
+  File "/root/.virtualenvs/sglang-0.5.6/lib/python3.10/site-packages/vllm/v1/worker/gpu_model_runner.py", line 6102, in capture_model
+    self._capture_cudagraphs(
+  File "/root/.virtualenvs/sglang-0.5.6/lib/python3.10/site-packages/vllm/v1/worker/gpu_model_runner.py", line 6217, in _capture_cudagraphs
+    self._warmup_and_capture(
+  File "/root/.virtualenvs/sglang-0.5.6/lib/python3.10/site-packages/vllm/v1/worker/gpu_model_runner.py", line 6152, in _warmup_and_capture
+    self._dummy_run(
+  File "/usr/local/lib/python3.10/dist-packages/torch/utils/_contextlib.py", line 120, in decorate_context
+    return func(*args, **kwargs)
+  File "/root/.virtualenvs/sglang-0.5.6/lib/python3.10/site-packages/vllm/v1/worker/gpu_model_runner.py", line 5418, in _dummy_run
+    sm.fill_(-1)
+RuntimeError: FillOp MUDNN failed in: Run
+2026-06-17 07:45:46 | core | 139949064447104 | ERROR : EngineCore failed to start.
+Traceback (most recent call last):
+  File "/root/.virtualenvs/sglang-0.5.6/lib/python3.10/site-packages/vllm/v1/engine/core.py", line 1110, in run_engine_core
+    engine_core = EngineCoreProc(*args, engine_index=dp_rank, **kwargs)
+  File "/root/.virtualenvs/sglang-0.5.6/lib/python3.10/site-packages/vllm/v1/engine/core.py", line 876, in __init__
+    super().__init__(
+  File "/root/.virtualenvs/sglang-0.5.6/lib/python3.10/site-packages/vllm/v1/engine/core.py", line 128, in __init__
+    kv_cache_config = self._initialize_kv_caches(vllm_config)
+  File "/root/.virtualenvs/sglang-0.5.6/lib/python3.10/site-packages/vllm/v1/engine/core.py", line 283, in _initialize_kv_caches
+    self.model_executor.initialize_from_config(kv_cache_configs)
+  File "/root/.virtualenvs/sglang-0.5.6/lib/python3.10/site-packages/vllm/v1/executor/abstract.py", line 124, in initialize_from_config
+    compilation_times: list[CompilationTimes] = self.collective_rpc(
+  File "/root/.virtualenvs/sglang-0.5.6/lib/python3.10/site-packages/vllm/v1/executor/uniproc_executor.py", line 80, in collective_rpc
+    result = run_method(self.driver_worker, method, args, kwargs)
+  File "/root/.virtualenvs/sglang-0.5.6/lib/python3.10/site-packages/vllm/v1/serial_utils.py", line 510, in run_method
+    return func(*args, **kwargs)
+  File "/root/.virtualenvs/sglang-0.5.6/lib/python3.10/site-packages/vllm/v1/worker/gpu_worker.py", line 590, in compile_or_warm_up_model
+    cuda_graph_memory_bytes = self.model_runner.capture_model()
+  File "/root/.virtualenvs/sglang-0.5.6/lib/python3.10/site-packages/vllm/v1/worker/gpu_model_runner.py", line 6102, in capture_model
+    self._capture_cudagraphs(
+  File "/root/.virtualenvs/sglang-0.5.6/lib/python3.10/site-packages/vllm/v1/worker/gpu_model_runner.py", line 6217, in _capture_cudagraphs
+    self._warmup_and_capture(
+  File "/root/.virtualenvs/sglang-0.5.6/lib/python3.10/site-packages/vllm/v1/worker/gpu_model_runner.py", line 6152, in _warmup_and_capture
+    self._dummy_run(
+  File "/usr/local/lib/python3.10/dist-packages/torch/utils/_contextlib.py", line 120, in decorate_context
+    return func(*args, **kwargs)
+  File "/root/.virtualenvs/sglang-0.5.6/lib/python3.10/site-packages/vllm/v1/worker/gpu_model_runner.py", line 5418, in _dummy_run
+    sm.fill_(-1)
+RuntimeError: FillOp MUDNN failed in: Run
+Process EngineCore:
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/multiprocessing/process.py", line 314, in _bootstrap
+    self.run()
+  File "/usr/lib/python3.10/multiprocessing/process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "/root/.virtualenvs/sglang-0.5.6/lib/python3.10/site-packages/vllm/v1/engine/core.py", line 1140, in run_engine_core
+    raise e
+  File "/root/.virtualenvs/sglang-0.5.6/lib/python3.10/site-packages/vllm/v1/engine/core.py", line 1110, in run_engine_core
+    engine_core = EngineCoreProc(*args, engine_index=dp_rank, **kwargs)
+  File "/root/.virtualenvs/sglang-0.5.6/lib/python3.10/site-packages/vllm/v1/engine/core.py", line 876, in __init__
+    super().__init__(
+  File "/root/.virtualenvs/sglang-0.5.6/lib/python3.10/site-packages/vllm/v1/engine/core.py", line 128, in __init__
+    kv_cache_config = self._initialize_kv_caches(vllm_config)
+  File "/root/.virtualenvs/sglang-0.5.6/lib/python3.10/site-packages/vllm/v1/engine/core.py", line 283, in _initialize_kv_caches
+    self.model_executor.initialize_from_config(kv_cache_configs)
+  File "/root/.virtualenvs/sglang-0.5.6/lib/python3.10/site-packages/vllm/v1/executor/abstract.py", line 124, in initialize_from_config
+    compilation_times: list[CompilationTimes] = self.collective_rpc(
+  File "/root/.virtualenvs/sglang-0.5.6/lib/python3.10/site-packages/vllm/v1/executor/uniproc_executor.py", line 80, in collective_rpc
+    result = run_method(self.driver_worker, method, args, kwargs)
+  File "/root/.virtualenvs/sglang-0.5.6/lib/python3.10/site-packages/vllm/v1/serial_utils.py", line 510, in run_method
+    return func(*args, **kwargs)
+  File "/root/.virtualenvs/sglang-0.5.6/lib/python3.10/site-packages/vllm/v1/worker/gpu_worker.py", line 590, in compile_or_warm_up_model
+    cuda_graph_memory_bytes = self.model_runner.capture_model()
+  File "/root/.virtualenvs/sglang-0.5.6/lib/python3.10/site-packages/vllm/v1/worker/gpu_model_runner.py", line 6102, in capture_model
+    self._capture_cudagraphs(
+  File "/root/.virtualenvs/sglang-0.5.6/lib/python3.10/site-packages/vllm/v1/worker/gpu_model_runner.py", line 6217, in _capture_cudagraphs
+    self._warmup_and_capture(
+  File "/root/.virtualenvs/sglang-0.5.6/lib/python3.10/site-packages/vllm/v1/worker/gpu_model_runner.py", line 6152, in _warmup_and_capture
+    self._dummy_run(
+  File "/usr/local/lib/python3.10/dist-packages/torch/utils/_contextlib.py", line 120, in decorate_context
+    return func(*args, **kwargs)
+  File "/root/.virtualenvs/sglang-0.5.6/lib/python3.10/site-packages/vllm/v1/worker/gpu_model_runner.py", line 5418, in _dummy_run
+    sm.fill_(-1)
+RuntimeError: FillOp MUDNN failed in: Run

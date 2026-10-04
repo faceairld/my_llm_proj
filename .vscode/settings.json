@@ -1,4 +1,5 @@
 {
     "python-envs.defaultEnvManager": "ms-python.python:conda",
-    "python-envs.defaultPackageManager": "ms-python.python:conda"
+    "python-envs.defaultPackageManager": "ms-python.python:conda",
+    "cmake.sourceDirectory": "E:/vscode/cuda_proj/SNN_proj1/Qwen2_5_0_5B/vllm_soruce_code/vllm"
 }

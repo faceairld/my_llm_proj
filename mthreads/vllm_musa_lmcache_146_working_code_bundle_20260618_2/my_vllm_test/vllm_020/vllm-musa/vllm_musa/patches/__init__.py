@@ -1,0 +1,171 @@
+# SPDX-License-Identifier: Apache-2.0
+# SPDX-FileCopyrightText: Copyright contributors to the vLLM project
+"""
+Patches for vLLM compatibility with MUSA platform.
+
+This module contains patches that modify vLLM source files at runtime
+to ensure compatibility with the MUSA Triton version.
+"""
+
+import importlib.util
+import os
+from pathlib import Path
+
+from vllm.logger import init_logger
+
+logger = init_logger(__name__)
+
+_patches_applied = False
+
+
+def _get_patch_files():
+    """Get all patch files in the patches directory."""
+    patches_dir = Path(__file__).parent
+    patch_files = []
+
+    for patch_file in patches_dir.glob("*.patch.py"):
+        # Extract module name from filename
+        # Format: module.name.patch.py -> module.name
+        module_name = patch_file.stem.rsplit(".patch", 1)[0]
+        # Convert filename format to module format
+        # vllm__attention__ops__triton_unified_attention -> vllm.attention.ops.triton_unified_attention
+        module_name = module_name.replace("__", ".")
+        patch_files.append((module_name, patch_file))
+
+    return patch_files
+
+
+def _load_patch_config(patch_file: Path) -> list[tuple[str, str]]:
+    """Load patch configuration from a patch file.
+
+    Patch files should define a PATCHES list of (old_str, new_str) tuples.
+    """
+    spec = importlib.util.spec_from_file_location("patch_config", patch_file)
+    if spec is None or spec.loader is None:
+        return []
+
+    module = importlib.util.module_from_spec(spec)
+    try:
+        spec.loader.exec_module(module)
+        return getattr(module, "PATCHES", [])
+    except Exception as e:
+        logger.warning(f"Failed to load patch config from {patch_file}: {e}")
+        return []
+
+
+def apply_patches():
+    """Apply all patches for MUSA compatibility.
+
+    This function should be called early during platform initialization.
+    """
+    global _patches_applied
+    if _patches_applied:
+        return
+
+    patch_files = _get_patch_files()
+
+    for module_name, patch_file in patch_files:
+        try:
+            # Find the module spec
+            try:
+                spec = importlib.util.find_spec(module_name)
+            except (ModuleNotFoundError, ImportError) as e:
+                # Module doesn't exist in this vLLM version (e.g., vllm.worker.worker
+                # exists in vLLM 0.10.x but not in 0.13.0 where V0 engine was removed)
+                # or has circular import issues during spec discovery
+                logger.debug(
+                    f"Module {module_name} not found or has import issues: {e}, "
+                    "skipping patch (this is expected for version-specific patches "
+                    "or when modules are not yet fully initialized)"
+                )
+                continue
+            if spec is None or spec.origin is None:
+                logger.debug(f"Module {module_name} not found, skipping patch")
+                continue
+
+            # Read the source file
+            try:
+                with open(spec.origin, "r") as f:
+                    source = f.read()
+            except (IOError, OSError) as e:
+                logger.debug(f"Cannot read {spec.origin}: {e}, skipping patch")
+                continue
+
+            # Load patches from patch file
+            patches = _load_patch_config(patch_file)
+            if not patches:
+                continue
+
+            # Check if any patches are needed.
+            # MUSA-0089/0096 fix: for INSERT-style patches (where `new` contains
+            # `old` plus extra inserted text), `old in source` remains True after
+            # first apply, causing accumulation across re-imports. Gate on
+            # `new not in source` to detect "patch already applied" state.
+            # Behaviour-preserving for REPLACEMENT-style patches where `new`
+            # differs entirely from `old`.
+            needs_patch = any(
+                old in source and new not in source for old, new in patches
+            )
+            if not needs_patch:
+                logger.debug(f"No patches needed for {module_name}")
+                continue
+
+            # Apply patches.
+            # MUSA-0089/0096 fix: same `new not in patched_source` gate as
+            # the outer needs_patch check. Without this, INSERT-style patches
+            # re-apply on every import and accumulate (e.g., MUSA-0088's
+            # cuda_communicator.py grew 10 duplicate `elif current_platform.is_musa()`
+            # blocks before MUSA-0089 caught it and manual sed -i restored).
+            patched_source = source
+            applied_count = 0
+            for old, new in patches:
+                if old in patched_source and new not in patched_source:
+                    patched_source = patched_source.replace(old, new)
+                    applied_count += 1
+
+            # Write back the patched source ATOMICALLY via tempfile + rename.
+            # Rationale: vLLM's spawn-based multiproc executor starts N worker
+            # processes nearly simultaneously, each of which re-imports
+            # vllm_musa and therefore re-runs apply_patches(). If a worker
+            # holds the file open for read (e.g. during `import
+            # vllm.utils.deep_gemm`) while another process is mid-write, the
+            # worker can observe a truncated/partial file and raise an
+            # ImportError mid-startup (observed during MUSA-0046 MiniMax-M2.7
+            # smoke #4, 2026-05-14). Atomic rename guarantees readers see
+            # either the pre-patch or post-patch content, never partial.
+            #
+            # Do not evict an already-imported module from sys.modules: some
+            # vLLM modules register torch custom ops at import time, and
+            # re-importing them would register the same schema twice in the
+            # current process.
+            import tempfile  # noqa: I001 — local import keeps top-level imports stable
+
+            tmp_fd, tmp_path = tempfile.mkstemp(
+                prefix=os.path.basename(spec.origin) + ".",
+                dir=os.path.dirname(spec.origin),
+            )
+            try:
+                with os.fdopen(tmp_fd, "w") as f:
+                    f.write(patched_source)
+                os.rename(tmp_path, spec.origin)
+            except Exception:
+                # Best-effort cleanup on error.
+                try:
+                    os.unlink(tmp_path)
+                except OSError:
+                    pass
+                raise
+
+            logger.info(f"Applied {applied_count} patch(es) to {module_name}")
+
+        except Exception as e:
+            # More detailed error handling for circular imports
+            if "circular import" in str(e) or "partially initialized" in str(e):
+                logger.debug(
+                    f"Skipping patch for {module_name} due to circular import "
+                    f"during initialization: {e}"
+                )
+            else:
+                logger.warning(f"Failed to apply patches to {module_name}: {e}")
+
+    _patches_applied = True

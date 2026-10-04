@@ -1,0 +1,266 @@
+'(ProtocolError('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer')), '(Request ID: 201a4492-c5d1-4837-9583-7d74beb457ca)')' thrown while requesting HEAD https://huggingface.co/qwen3-8b-lmcache/resolve/main/tokenizer_config.json
+WARNING:huggingface_hub.utils._http:'(ProtocolError('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer')), '(Request ID: 201a4492-c5d1-4837-9583-7d74beb457ca)')' thrown while requesting HEAD https://huggingface.co/qwen3-8b-lmcache/resolve/main/tokenizer_config.json
+Retrying in 1s [Retry 1/5].
+WARNING:huggingface_hub.utils._http:Retrying in 1s [Retry 1/5].
+'(ProtocolError('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer')), '(Request ID: 66e0555a-6291-4d26-aa4b-186e6ccc114d)')' thrown while requesting HEAD https://huggingface.co/qwen3-8b-lmcache/resolve/main/tokenizer_config.json
+WARNING:huggingface_hub.utils._http:'(ProtocolError('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer')), '(Request ID: 66e0555a-6291-4d26-aa4b-186e6ccc114d)')' thrown while requesting HEAD https://huggingface.co/qwen3-8b-lmcache/resolve/main/tokenizer_config.json
+Retrying in 2s [Retry 2/5].
+WARNING:huggingface_hub.utils._http:Retrying in 2s [Retry 2/5].
+'(ProtocolError('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer')), '(Request ID: 2be15043-79f1-4012-ae91-46295d2c3118)')' thrown while requesting HEAD https://huggingface.co/qwen3-8b-lmcache/resolve/main/tokenizer_config.json
+WARNING:huggingface_hub.utils._http:'(ProtocolError('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer')), '(Request ID: 2be15043-79f1-4012-ae91-46295d2c3118)')' thrown while requesting HEAD https://huggingface.co/qwen3-8b-lmcache/resolve/main/tokenizer_config.json
+Retrying in 4s [Retry 3/5].
+WARNING:huggingface_hub.utils._http:Retrying in 4s [Retry 3/5].
+'(ProtocolError('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer')), '(Request ID: 04dbf3e5-fc58-4fc2-ad35-859b22622c96)')' thrown while requesting HEAD https://huggingface.co/qwen3-8b-lmcache/resolve/main/tokenizer_config.json
+WARNING:huggingface_hub.utils._http:'(ProtocolError('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer')), '(Request ID: 04dbf3e5-fc58-4fc2-ad35-859b22622c96)')' thrown while requesting HEAD https://huggingface.co/qwen3-8b-lmcache/resolve/main/tokenizer_config.json
+Retrying in 8s [Retry 4/5].
+WARNING:huggingface_hub.utils._http:Retrying in 8s [Retry 4/5].
+'(ProtocolError('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer')), '(Request ID: 8a042d11-7c86-46ae-aede-b087bed816d9)')' thrown while requesting HEAD https://huggingface.co/qwen3-8b-lmcache/resolve/main/tokenizer_config.json
+WARNING:huggingface_hub.utils._http:'(ProtocolError('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer')), '(Request ID: 8a042d11-7c86-46ae-aede-b087bed816d9)')' thrown while requesting HEAD https://huggingface.co/qwen3-8b-lmcache/resolve/main/tokenizer_config.json
+Retrying in 8s [Retry 5/5].
+WARNING:huggingface_hub.utils._http:Retrying in 8s [Retry 5/5].
+'(ProtocolError('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer')), '(Request ID: 6c8c0fbf-27d3-43f5-a8aa-fe21c431bdfd)')' thrown while requesting HEAD https://huggingface.co/qwen3-8b-lmcache/resolve/main/tokenizer_config.json
+WARNING:huggingface_hub.utils._http:'(ProtocolError('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer')), '(Request ID: 6c8c0fbf-27d3-43f5-a8aa-fe21c431bdfd)')' thrown while requesting HEAD https://huggingface.co/qwen3-8b-lmcache/resolve/main/tokenizer_config.json
+'(ProtocolError('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer')), '(Request ID: 08ec4190-0f91-45cd-85e2-f611497114f9)')' thrown while requesting HEAD https://huggingface.co/qwen3-8b-lmcache/resolve/main/config.json
+WARNING:huggingface_hub.utils._http:'(ProtocolError('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer')), '(Request ID: 08ec4190-0f91-45cd-85e2-f611497114f9)')' thrown while requesting HEAD https://huggingface.co/qwen3-8b-lmcache/resolve/main/config.json
+Retrying in 1s [Retry 1/5].
+WARNING:huggingface_hub.utils._http:Retrying in 1s [Retry 1/5].
+'(ProtocolError('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer')), '(Request ID: eea894c1-2570-47f5-9ad8-691e3890de11)')' thrown while requesting HEAD https://huggingface.co/qwen3-8b-lmcache/resolve/main/config.json
+WARNING:huggingface_hub.utils._http:'(ProtocolError('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer')), '(Request ID: eea894c1-2570-47f5-9ad8-691e3890de11)')' thrown while requesting HEAD https://huggingface.co/qwen3-8b-lmcache/resolve/main/config.json
+Retrying in 2s [Retry 2/5].
+WARNING:huggingface_hub.utils._http:Retrying in 2s [Retry 2/5].
+'(ProtocolError('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer')), '(Request ID: c99e6183-9804-4108-bd53-b80bc7d78d0b)')' thrown while requesting HEAD https://huggingface.co/qwen3-8b-lmcache/resolve/main/config.json
+WARNING:huggingface_hub.utils._http:'(ProtocolError('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer')), '(Request ID: c99e6183-9804-4108-bd53-b80bc7d78d0b)')' thrown while requesting HEAD https://huggingface.co/qwen3-8b-lmcache/resolve/main/config.json
+Retrying in 4s [Retry 3/5].
+WARNING:huggingface_hub.utils._http:Retrying in 4s [Retry 3/5].
+'(ProtocolError('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer')), '(Request ID: af6351c0-039e-4d63-9d16-00d4f7cb67a4)')' thrown while requesting HEAD https://huggingface.co/qwen3-8b-lmcache/resolve/main/config.json
+WARNING:huggingface_hub.utils._http:'(ProtocolError('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer')), '(Request ID: af6351c0-039e-4d63-9d16-00d4f7cb67a4)')' thrown while requesting HEAD https://huggingface.co/qwen3-8b-lmcache/resolve/main/config.json
+Retrying in 8s [Retry 4/5].
+WARNING:huggingface_hub.utils._http:Retrying in 8s [Retry 4/5].
+'(ProtocolError('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer')), '(Request ID: 49d07f28-1c86-461b-b405-14b72234b229)')' thrown while requesting HEAD https://huggingface.co/qwen3-8b-lmcache/resolve/main/config.json
+WARNING:huggingface_hub.utils._http:'(ProtocolError('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer')), '(Request ID: 49d07f28-1c86-461b-b405-14b72234b229)')' thrown while requesting HEAD https://huggingface.co/qwen3-8b-lmcache/resolve/main/config.json
+Retrying in 8s [Retry 5/5].
+WARNING:huggingface_hub.utils._http:Retrying in 8s [Retry 5/5].
+'(ProtocolError('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer')), '(Request ID: 047dd3d9-eb66-4933-98cd-e776e328e78b)')' thrown while requesting HEAD https://huggingface.co/qwen3-8b-lmcache/resolve/main/config.json
+WARNING:huggingface_hub.utils._http:'(ProtocolError('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer')), '(Request ID: 047dd3d9-eb66-4933-98cd-e776e328e78b)')' thrown while requesting HEAD https://huggingface.co/qwen3-8b-lmcache/resolve/main/config.json
+benchmark_args=Namespace(backend='vllm', base_url=None, host='127.0.0.1', port=19001, dataset_name='generated-shared-prefix', dataset_path='', model='qwen3-8b-lmcache', served_model_name='qwen3-8b-lmcache', tokenizer='/data/SQT-v1.0.5-test/models/qwen3-8b', num_prompts=160, sharegpt_output_len=None, sharegpt_context_len=None, random_input_len=1024, random_output_len=1024, random_range_ratio=0.0, image_count=1, image_resolution='1080p', random_image_count=False, image_format='jpeg', image_content='random', request_rate=inf, burstiness=1.0, use_trace_timestamps=False, max_concurrency=8, output_file='/data/my_vllm_test/vllm_020/bench_results_lmcache_step2/lmcache40_step2_overcap_20260617_081346.json', output_details=False, print_requests=False, disable_tqdm=True, disable_stream=False, return_logprob=False, seed=1, disable_ignore_eos=False, extra_request_body=None, apply_chat_template=False, profile=False, plot_throughput=False, profile_activities=['CPU', 'GPU'], profile_num_steps=None, profile_by_stage=False, profile_stages=None, lora_name=None, lora_request_distribution='uniform', lora_zipf_alpha=1.5, prompt_suffix='', pd_separated=False, profile_prefill_url=None, profile_decode_url=None, flush_cache=False, warmup_requests=1, tokenize_prompt=False, gsp_num_groups=80, gsp_prompts_per_group=2, gsp_system_prompt_len=3072, gsp_question_len=128, gsp_output_len=64, gsp_range_ratio=1.0, gsp_fast_prepare=False, mooncake_slowdown_factor=1.0, mooncake_num_rounds=1, mooncake_workload='conversation', tag=None)
+Fail to load tokenizer config with error=We couldn't connect to 'https://huggingface.co' to load the files, and couldn't find them in the cached files.
+Check your internet connection or see how to run the library in offline mode at 'https://huggingface.co/docs/transformers/installation#offline-mode'.
+
+WARNING It is recommended to use the `Chat` or `Instruct` model for benchmarking.
+Because when the tokenizer counts the output tokens, if there is gibberish, it might count incorrectly.
+
+Namespace(backend='vllm', base_url=None, host='127.0.0.1', port=19001, dataset_name='generated-shared-prefix', dataset_path='', model='qwen3-8b-lmcache', served_model_name='qwen3-8b-lmcache', tokenizer='/data/SQT-v1.0.5-test/models/qwen3-8b', num_prompts=160, sharegpt_output_len=None, sharegpt_context_len=None, random_input_len=1024, random_output_len=1024, random_range_ratio=0.0, image_count=1, image_resolution='1080p', random_image_count=False, image_format='jpeg', image_content='random', request_rate=inf, burstiness=1.0, use_trace_timestamps=False, max_concurrency=8, output_file='/data/my_vllm_test/vllm_020/bench_results_lmcache_step2/lmcache40_step2_overcap_20260617_081346.json', output_details=False, print_requests=False, disable_tqdm=True, disable_stream=False, return_logprob=False, seed=1, disable_ignore_eos=False, extra_request_body=None, apply_chat_template=False, profile=False, plot_throughput=False, profile_activities=['CPU', 'GPU'], profile_num_steps=None, profile_by_stage=False, profile_stages=None, lora_name=None, lora_request_distribution='uniform', lora_zipf_alpha=1.5, prompt_suffix='', pd_separated=False, profile_prefill_url=None, profile_decode_url=None, flush_cache=False, warmup_requests=1, tokenize_prompt=False, gsp_num_groups=80, gsp_prompts_per_group=2, gsp_system_prompt_len=3072, gsp_question_len=128, gsp_output_len=64, gsp_range_ratio=1.0, gsp_fast_prepare=False, mooncake_slowdown_factor=1.0, mooncake_num_rounds=1, mooncake_workload='conversation', tag=None)
+
+
+Generating new input data... (num_groups=80, 2, system_prompt_len=3072, question_len=128, output_len=64, range_ratio=1.0)
+Generating system prompt:   0%|          | 0/80 [00:00<?, ?it/s]
+Generating questions:   0%|          | 0/2 [00:00<?, ?it/s][A
+                                                           [A
+Generating questions:   0%|          | 0/2 [00:00<?, ?it/s][A
+                                                           [AGenerating system prompt:   2%|▎         | 2/80 [00:00<00:04, 19.32it/s]
+Generating questions:   0%|          | 0/2 [00:00<?, ?it/s][A
+                                                           [A
+Generating questions:   0%|          | 0/2 [00:00<?, ?it/s][A
+                                                           [A
+Generating questions:   0%|          | 0/2 [00:00<?, ?it/s][A
+                                                           [A
+Generating questions:   0%|          | 0/2 [00:00<?, ?it/s][A
+                                                           [AGenerating system prompt:   8%|▊         | 6/80 [00:00<00:02, 29.27it/s]
+Generating questions:   0%|          | 0/2 [00:00<?, ?it/s][A
+                                                           [A
+Generating questions:   0%|          | 0/2 [00:00<?, ?it/s][A
+                                                           [A
+Generating questions:   0%|          | 0/2 [00:00<?, ?it/s][A
+                                                           [A
+Generating questions:   0%|          | 0/2 [00:00<?, ?it/s][A
+                                                           [AGenerating system prompt:  12%|█▎        | 10/80 [00:00<00:02, 30.05it/s]
+Generating questions:   0%|          | 0/2 [00:00<?, ?it/s][A
+                                                           [A
+Generating questions:   0%|          | 0/2 [00:00<?, ?it/s][A
+                                                           [A
+Generating questions:   0%|          | 0/2 [00:00<?, ?it/s][A
+                                                           [A
+Generating questions:   0%|          | 0/2 [00:00<?, ?it/s][A
+                                                           [AGenerating system prompt:  18%|█▊        | 14/80 [00:00<00:02, 31.48it/s]
+Generating questions:   0%|          | 0/2 [00:00<?, ?it/s][A
+                                                           [A
+Generating questions:   0%|          | 0/2 [00:00<?, ?it/s][A
+                                                           [A
+Generating questions:   0%|          | 0/2 [00:00<?, ?it/s][A
+                                                           [A
+Generating questions:   0%|          | 0/2 [00:00<?, ?it/s][A
+                                                           [AGenerating system prompt:  22%|██▎       | 18/80 [00:00<00:01, 31.61it/s]
+Generating questions:   0%|          | 0/2 [00:00<?, ?it/s][A
+                                                           [A
+Generating questions:   0%|          | 0/2 [00:00<?, ?it/s][A
+                                                           [A
+Generating questions:   0%|          | 0/2 [00:00<?, ?it/s][A
+                                                           [A
+Generating questions:   0%|          | 0/2 [00:00<?, ?it/s][A
+                                                           [AGenerating system prompt:  28%|██▊       | 22/80 [00:00<00:01, 32.35it/s]
+Generating questions:   0%|          | 0/2 [00:00<?, ?it/s][A
+                                                           [A
+Generating questions:   0%|          | 0/2 [00:00<?, ?it/s][A
+                                                           [A
+Generating questions:   0%|          | 0/2 [00:00<?, ?it/s][A
+                                                           [A
+Generating questions:   0%|          | 0/2 [00:00<?, ?it/s][A
+                                                           [AGenerating system prompt:  32%|███▎      | 26/80 [00:00<00:01, 32.90it/s]
+Generating questions:   0%|          | 0/2 [00:00<?, ?it/s][A
+                                                           [A
+Generating questions:   0%|          | 0/2 [00:00<?, ?it/s][A
+                                                           [A
+Generating questions:   0%|          | 0/2 [00:00<?, ?it/s][A
+                                                           [A
+Generating questions:   0%|          | 0/2 [00:00<?, ?it/s][A
+                                                           [AGenerating system prompt:  38%|███▊      | 30/80 [00:00<00:01, 32.80it/s]
+Generating questions:   0%|          | 0/2 [00:00<?, ?it/s][A
+                                                           [A
+Generating questions:   0%|          | 0/2 [00:00<?, ?it/s][A
+                                                           [A
+Generating questions:   0%|          | 0/2 [00:00<?, ?it/s][A
+                                                           [A
+Generating questions:   0%|          | 0/2 [00:00<?, ?it/s][A
+                                                           [AGenerating system prompt:  42%|████▎     | 34/80 [00:01<00:01, 32.04it/s]
+Generating questions:   0%|          | 0/2 [00:00<?, ?it/s][A
+                                                           [A
+Generating questions:   0%|          | 0/2 [00:00<?, ?it/s][A
+                                                           [A
+Generating questions:   0%|          | 0/2 [00:00<?, ?it/s][A
+                                                           [A
+Generating questions:   0%|          | 0/2 [00:00<?, ?it/s][A
+                                                           [AGenerating system prompt:  48%|████▊     | 38/80 [00:01<00:01, 31.68it/s]
+Generating questions:   0%|          | 0/2 [00:00<?, ?it/s][A
+                                                           [A
+Generating questions:   0%|          | 0/2 [00:00<?, ?it/s][A
+                                                           [A
+Generating questions:   0%|          | 0/2 [00:00<?, ?it/s][A
+                                                           [A
+Generating questions:   0%|          | 0/2 [00:00<?, ?it/s][A
+                                                           [AGenerating system prompt:  52%|█████▎    | 42/80 [00:01<00:01, 31.85it/s]
+Generating questions:   0%|          | 0/2 [00:00<?, ?it/s][A
+                                                           [A
+Generating questions:   0%|          | 0/2 [00:00<?, ?it/s][A
+                                                           [A
+Generating questions:   0%|          | 0/2 [00:00<?, ?it/s][A
+                                                           [A
+Generating questions:   0%|          | 0/2 [00:00<?, ?it/s][A
+                                                           [AGenerating system prompt:  57%|█████▊    | 46/80 [00:01<00:01, 30.91it/s]
+Generating questions:   0%|          | 0/2 [00:00<?, ?it/s][A
+                                                           [A
+Generating questions:   0%|          | 0/2 [00:00<?, ?it/s][A
+                                                           [A
+Generating questions:   0%|          | 0/2 [00:00<?, ?it/s][A
+                                                           [A
+Generating questions:   0%|          | 0/2 [00:00<?, ?it/s][A
+                                                           [AGenerating system prompt:  62%|██████▎   | 50/80 [00:01<00:00, 30.76it/s]
+Generating questions:   0%|          | 0/2 [00:00<?, ?it/s][A
+                                                           [A
+Generating questions:   0%|          | 0/2 [00:00<?, ?it/s][A
+                                                           [A
+Generating questions:   0%|          | 0/2 [00:00<?, ?it/s][A
+                                                           [A
+Generating questions:   0%|          | 0/2 [00:00<?, ?it/s][A
+                                                           [AGenerating system prompt:  68%|██████▊   | 54/80 [00:01<00:00, 31.58it/s]
+Generating questions:   0%|          | 0/2 [00:00<?, ?it/s][A
+                                                           [A
+Generating questions:   0%|          | 0/2 [00:00<?, ?it/s][A
+                                                           [A
+Generating questions:   0%|          | 0/2 [00:00<?, ?it/s][A
+                                                           [A
+Generating questions:   0%|          | 0/2 [00:00<?, ?it/s][A
+                                                           [AGenerating system prompt:  72%|███████▎  | 58/80 [00:01<00:00, 31.71it/s]
+Generating questions:   0%|          | 0/2 [00:00<?, ?it/s][A
+                                                           [A
+Generating questions:   0%|          | 0/2 [00:00<?, ?it/s][A
+                                                           [A
+Generating questions:   0%|          | 0/2 [00:00<?, ?it/s][A
+                                                           [A
+Generating questions:   0%|          | 0/2 [00:00<?, ?it/s][A
+                                                           [AGenerating system prompt:  78%|███████▊  | 62/80 [00:01<00:00, 32.15it/s]
+Generating questions:   0%|          | 0/2 [00:00<?, ?it/s][A
+                                                           [A
+Generating questions:   0%|          | 0/2 [00:00<?, ?it/s][A
+                                                           [A
+Generating questions:   0%|          | 0/2 [00:00<?, ?it/s][A
+                                                           [A
+Generating questions:   0%|          | 0/2 [00:00<?, ?it/s][A
+                                                           [AGenerating system prompt:  82%|████████▎ | 66/80 [00:02<00:00, 32.64it/s]
+Generating questions:   0%|          | 0/2 [00:00<?, ?it/s][A
+                                                           [A
+Generating questions:   0%|          | 0/2 [00:00<?, ?it/s][A
+                                                           [A
+Generating questions:   0%|          | 0/2 [00:00<?, ?it/s][A
+                                                           [A
+Generating questions:   0%|          | 0/2 [00:00<?, ?it/s][A
+                                                           [AGenerating system prompt:  88%|████████▊ | 70/80 [00:02<00:00, 31.88it/s]
+Generating questions:   0%|          | 0/2 [00:00<?, ?it/s][A
+                                                           [A
+Generating questions:   0%|          | 0/2 [00:00<?, ?it/s][A
+                                                           [A
+Generating questions:   0%|          | 0/2 [00:00<?, ?it/s][A
+                                                           [A
+Generating questions:   0%|          | 0/2 [00:00<?, ?it/s][A
+                                                           [AGenerating system prompt:  92%|█████████▎| 74/80 [00:02<00:00, 32.22it/s]
+Generating questions:   0%|          | 0/2 [00:00<?, ?it/s][A
+                                                           [A
+Generating questions:   0%|          | 0/2 [00:00<?, ?it/s][A
+                                                           [A
+Generating questions:   0%|          | 0/2 [00:00<?, ?it/s][A
+                                                           [A
+Generating questions:   0%|          | 0/2 [00:00<?, ?it/s][A
+                                                           [AGenerating system prompt:  98%|█████████▊| 78/80 [00:02<00:00, 32.53it/s]
+Generating questions:   0%|          | 0/2 [00:00<?, ?it/s][A
+                                                           [A
+Generating questions:   0%|          | 0/2 [00:00<?, ?it/s][A
+                                                           [AGenerating system prompt: 100%|██████████| 80/80 [00:02<00:00, 31.77it/s]
+
+Generated shared prefix dataset statistics:
+Number of groups: 80
+Prompts per group: 2
+Total prompts: 160
+Total input tokens: 538610
+Total output tokens: 10240
+Average system prompt length: 3230.9 tokens
+Average question length: 134.4 tokens
+
+Caching generated input data to /root/.cache/sglang/benchmark/gen_shared_prefix_1_80_2_3072_128_64_Qwen2TokenizerFast.pkl
+Starting warmup with 1 sequences...
+Warmup completed with 1 sequences. Starting main benchmark run...
+
+============ Serving Benchmark Result ============
+Backend:                                 vllm      
+Traffic request rate:                    inf       
+Max request concurrency:                 8         
+Successful requests:                     160       
+Benchmark duration (s):                  60.46     
+Total input tokens:                      538610    
+Total input text tokens:                 538610    
+Total input vision tokens:               0         
+Total generated tokens:                  10240     
+Total generated tokens (retokenized):    13232     
+Request throughput (req/s):              2.65      
+Input token throughput (tok/s):          8908.57   
+Output token throughput (tok/s):         169.37    
+Peak output token throughput (tok/s):    264.00    
+Peak concurrent requests:                16        
+Total token throughput (tok/s):          9077.94   
+Concurrency:                             7.98      
+----------------End-to-End Latency----------------
+Mean E2E Latency (ms):                   3015.71   
+Median E2E Latency (ms):                 3003.70   
+---------------Time to First Token----------------
+Mean TTFT (ms):                          817.78    
+Median TTFT (ms):                        748.80    
+P99 TTFT (ms):                           1768.32   
+-----Time per Output Token (excl. 1st token)------
+Mean TPOT (ms):                          34.89     
+Median TPOT (ms):                        35.33     
+P99 TPOT (ms):                           46.48     
+---------------Inter-Token Latency----------------
+Mean ITL (ms):                           34.98     
+Median ITL (ms):                         31.03     
+P95 ITL (ms):                            31.82     
+P99 ITL (ms):                            270.74    
+Max ITL (ms):                            999.47    
+==================================================

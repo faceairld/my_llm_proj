@@ -72,7 +72,9 @@ def benchmark_generate(module, input_data, max_seq_len, phase_name, graph_use = 
                                 position_num = static_pos_num,
                                 attention_mask = None,
                                 cache_position = static_cache_pos,
-                                current_seq_len = None
+                                update_seq_len = False,
+                                current_seq_len = past_len + 1
+                                # current_seq_len = None
                             )
                 if step < 2 or not graph_use:
                     module.seq_len_t.fill_(past_len + input_len) 
@@ -120,6 +122,7 @@ if __name__ == "__main__":
     prompt = "请详细分析一下人工智能在未来十年的发展趋势，并给出三个具体的应用场景。" * 15
     text = tokenizer.apply_chat_template([{"role": "user", "content": prompt}], tokenize=False, add_generation_prompt=True)
     input_ids = tokenizer(text, return_tensors="pt").input_ids.to(device)
+    print(f"Prefill token count: {input_ids.size(1)}")
     
     # ==========================================
     # 阶段 1：预热

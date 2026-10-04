@@ -1,0 +1,145 @@
+2026-06-16 07:51:10 | __init__ | 140421168624064 | INFO : Available plugins for group vllm.platform_plugins:
+2026-06-16 07:51:10 | __init__ | 140421168624064 | INFO : - musa -> vllm_musa:musa_platform_plugin
+2026-06-16 07:51:10 | __init__ | 140421168624064 | INFO : All plugins in this group will be loaded. Set `VLLM_PLUGINS` to control which plugins to load.
+2026-06-16 07:51:10 | __init__ | 140421168624064 | ERROR : Failed to load plugin musa
+Traceback (most recent call last):
+  File "/root/.virtualenvs/sglang-0.5.6/lib/python3.10/site-packages/vllm/plugins/__init__.py", line 61, in load_plugins_by_group
+    func = plugin.load()
+  File "/usr/lib/python3.10/importlib/metadata/__init__.py", line 173, in load
+    return functools.reduce(getattr, attrs, module)
+AttributeError: partially initialized module 'vllm_musa' has no attribute 'musa_platform_plugin' (most likely due to a circular import)
+2026-06-16 07:51:10 | template_heuristics | 140421168624064 | INFO : MUSA-0087: Inductor template heuristic registration is default-off (Eagle3 draft compile crash on TP=8 M2.5). Set VLLM_MUSA_ENABLE_INDUCTOR_HEURISTICS=1 to opt in for non-Eagle3 workloads.
+2026-06-16 07:51:10 | __init__ | 140421168624064 | INFO : Platform plugin musa is activated
+WARNING:vllm_musa:MUSA-0087: failed to register Inductor template heuristics for MUSA (cannot import name 'is_local_first_rank' from partially initialized module 'vllm.distributed.parallel_state' (most likely due to a circular import) (/root/.virtualenvs/sglang-0.5.6/lib/python3.10/site-packages/vllm/distributed/parallel_state.py)); falling back to ATen path for compiled `mm` ops.
+2026-06-16 07:51:25 | __init__ | 140184350237120 | WARNING : MUSA-0087: failed to register Inductor template heuristics for MUSA (cannot import name 'is_local_first_rank' from partially initialized module 'vllm.distributed.parallel_state' (most likely due to a circular import) (/root/.virtualenvs/sglang-0.5.6/lib/python3.10/site-packages/vllm/distributed/parallel_state.py)); falling back to ATen path for compiled `mm` ops.
+INFO:vllm.platforms:Platform plugin musa is activated
+2026-06-16 07:51:25 | __init__ | 140184350237120 | INFO : Platform plugin musa is activated
+INFO:patch_config:MUSA-0109: VLLM_MUSA_DRAFT_COPY_DEFAULT_STREAM=0; draft_token_ids_copy_stream stays on a dedicated stream (default vllm)
+2026-06-16 07:51:27 | vllm__v1__worker__gpu_model_runner.patch | 140184350237120 | INFO : MUSA-0109: VLLM_MUSA_DRAFT_COPY_DEFAULT_STREAM=0; draft_token_ids_copy_stream stays on a dedicated stream (default vllm)
+WARNING:vllm.distributed.nixl_utils:NIXL is not available
+2026-06-16 07:51:27 | nixl_utils | 140184350237120 | WARNING : NIXL is not available
+WARNING:vllm.distributed.nixl_utils:NIXL agent config is not available
+2026-06-16 07:51:27 | nixl_utils | 140184350237120 | WARNING : NIXL agent config is not available
+INFO:patch_config:MUSA-0090: EagleProposer.propose monkey-patched (dispatcher installed; runner lazy-inits on first MUSA call)
+2026-06-16 07:51:27 | vllm__v1__spec_decode__eagle.patch | 140184350237120 | INFO : MUSA-0090: EagleProposer.propose monkey-patched (dispatcher installed; runner lazy-inits on first MUSA call)
+INFO:patch_config:MUSA-0109 POC: VLLM_MUSA_TREE_GRAPH_CAPTURE != 1; tree propose graph capture is disabled (using vllm's iterative path).
+2026-06-16 07:51:27 | vllm__v1__spec_decode__llm_base_proposer.patch | 140184350237120 | INFO : MUSA-0109 POC: VLLM_MUSA_TREE_GRAPH_CAPTURE != 1; tree propose graph capture is disabled (using vllm's iterative path).
+INFO:vllm_musa:MUSA patches and custom ops registered
+2026-06-16 07:51:27 | __init__ | 140184350237120 | INFO : MUSA patches and custom ops registered
+INFO:vllm.v1.engine.core:Initializing a V1 LLM engine (v0.20.1.dev0+g88d34c640.d20260519) with config: model='/data/SQT-v1.0.5-test/models/qwen3-8b', speculative_config=None, tokenizer='/data/SQT-v1.0.5-test/models/qwen3-8b', skip_tokenizer_init=False, tokenizer_mode=auto, revision=None, tokenizer_revision=None, trust_remote_code=True, dtype=torch.bfloat16, max_seq_len=4096, download_dir=None, load_format=auto, tensor_parallel_size=1, pipeline_parallel_size=1, data_parallel_size=1, decode_context_parallel_size=1, dcp_comm_backend=ag_rs, disable_custom_all_reduce=False, quantization=None, quantization_config=None, enforce_eager=True, enable_return_routed_experts=False, kv_cache_dtype=auto, device_config=musa, structured_outputs_config=StructuredOutputsConfig(backend='auto', disable_any_whitespace=False, disable_additional_properties=False, reasoning_parser='', reasoning_parser_plugin='', enable_in_reasoning=False), observability_config=ObservabilityConfig(show_hidden_metrics_for_version=None, otlp_traces_endpoint=None, collect_detailed_traces=None, kv_cache_metrics=False, kv_cache_metrics_sample=0.01, cudagraph_metrics=False, enable_layerwise_nvtx_tracing=False, enable_mfu_metrics=False, enable_mm_processor_stats=False, enable_logging_iteration_details=False), seed=0, served_model_name=qwen3-8b-pure, enable_prefix_caching=True, enable_chunked_prefill=True, pooler_config=None, compilation_config={'mode': <CompilationMode.NONE: 0>, 'debug_dump_path': None, 'cache_dir': '', 'compile_cache_save_format': 'binary', 'backend': 'inductor', 'custom_ops': ['all'], 'ir_enable_torch_wrap': False, 'splitting_ops': [], 'compile_mm_encoder': False, 'cudagraph_mm_encoder': False, 'encoder_cudagraph_token_budgets': [], 'encoder_cudagraph_max_vision_items_per_batch': 0, 'encoder_cudagraph_max_frames_per_batch': None, 'compile_sizes': [], 'compile_ranges_endpoints': [8192], 'inductor_compile_config': {'enable_auto_functionalized_v2': False, 'size_asserts': False, 'alignment_asserts': False, 'scalar_asserts': False, 'combo_kernels': True, 'benchmark_combo_kernel': True}, 'inductor_passes': {}, 'cudagraph_mode': <CUDAGraphMode.NONE: 0>, 'cudagraph_num_of_warmups': 0, 'cudagraph_capture_sizes': [], 'cudagraph_copy_inputs': False, 'cudagraph_specialize_lora': True, 'use_inductor_graph_partition': False, 'pass_config': {'fuse_norm_quant': True, 'fuse_act_quant': True, 'fuse_attn_quant': False, 'enable_sp': False, 'fuse_gemm_comms': False, 'fuse_allreduce_rms': False}, 'max_cudagraph_capture_size': 0, 'dynamic_shapes_config': {'type': <DynamicShapesType.BACKED: 'backed'>, 'evaluate_guards': False, 'assume_32_bit_indexing': False}, 'local_cache_dir': None, 'fast_moe_cold_start': True, 'static_all_moe_layers': []}, kernel_config=KernelConfig(ir_op_priority=IrOpPriorityConfig(rms_norm=['musa', 'native']), enable_flashinfer_autotune=True, moe_backend='auto')
+2026-06-16 07:51:27 | core | 140184350237120 | INFO : Initializing a V1 LLM engine (v0.20.1.dev0+g88d34c640.d20260519) with config: model='/data/SQT-v1.0.5-test/models/qwen3-8b', speculative_config=None, tokenizer='/data/SQT-v1.0.5-test/models/qwen3-8b', skip_tokenizer_init=False, tokenizer_mode=auto, revision=None, tokenizer_revision=None, trust_remote_code=True, dtype=torch.bfloat16, max_seq_len=4096, download_dir=None, load_format=auto, tensor_parallel_size=1, pipeline_parallel_size=1, data_parallel_size=1, decode_context_parallel_size=1, dcp_comm_backend=ag_rs, disable_custom_all_reduce=False, quantization=None, quantization_config=None, enforce_eager=True, enable_return_routed_experts=False, kv_cache_dtype=auto, device_config=musa, structured_outputs_config=StructuredOutputsConfig(backend='auto', disable_any_whitespace=False, disable_additional_properties=False, reasoning_parser='', reasoning_parser_plugin='', enable_in_reasoning=False), observability_config=ObservabilityConfig(show_hidden_metrics_for_version=None, otlp_traces_endpoint=None, collect_detailed_traces=None, kv_cache_metrics=False, kv_cache_metrics_sample=0.01, cudagraph_metrics=False, enable_layerwise_nvtx_tracing=False, enable_mfu_metrics=False, enable_mm_processor_stats=False, enable_logging_iteration_details=False), seed=0, served_model_name=qwen3-8b-pure, enable_prefix_caching=True, enable_chunked_prefill=True, pooler_config=None, compilation_config={'mode': <CompilationMode.NONE: 0>, 'debug_dump_path': None, 'cache_dir': '', 'compile_cache_save_format': 'binary', 'backend': 'inductor', 'custom_ops': ['all'], 'ir_enable_torch_wrap': False, 'splitting_ops': [], 'compile_mm_encoder': False, 'cudagraph_mm_encoder': False, 'encoder_cudagraph_token_budgets': [], 'encoder_cudagraph_max_vision_items_per_batch': 0, 'encoder_cudagraph_max_frames_per_batch': None, 'compile_sizes': [], 'compile_ranges_endpoints': [8192], 'inductor_compile_config': {'enable_auto_functionalized_v2': False, 'size_asserts': False, 'alignment_asserts': False, 'scalar_asserts': False, 'combo_kernels': True, 'benchmark_combo_kernel': True}, 'inductor_passes': {}, 'cudagraph_mode': <CUDAGraphMode.NONE: 0>, 'cudagraph_num_of_warmups': 0, 'cudagraph_capture_sizes': [], 'cudagraph_copy_inputs': False, 'cudagraph_specialize_lora': True, 'use_inductor_graph_partition': False, 'pass_config': {'fuse_norm_quant': True, 'fuse_act_quant': True, 'fuse_attn_quant': False, 'enable_sp': False, 'fuse_gemm_comms': False, 'fuse_allreduce_rms': False}, 'max_cudagraph_capture_size': 0, 'dynamic_shapes_config': {'type': <DynamicShapesType.BACKED: 'backed'>, 'evaluate_guards': False, 'assume_32_bit_indexing': False}, 'local_cache_dir': None, 'fast_moe_cold_start': True, 'static_all_moe_layers': []}, kernel_config=KernelConfig(ir_op_priority=IrOpPriorityConfig(rms_norm=['musa', 'native']), enable_flashinfer_autotune=True, moe_backend='auto')
+WARNING:py.warnings:/usr/local/lib/python3.10/dist-packages/torch/__init__.py:1617: UserWarning: Please use the new API settings to control TF32 behavior, such as torch.backends.cudnn.conv.fp32_precision = 'tf32' or torch.backends.cuda.matmul.fp32_precision = 'ieee'. Old settings, e.g, torch.backends.cuda.matmul.allow_tf32 = True, torch.backends.cudnn.allow_tf32 = True, allowTF32CuDNN() and allowTF32CuBLAS() will be deprecated after Pytorch 2.9. Please see https://pytorch.org/docs/main/notes/cuda.html#tensorfloat-32-tf32-on-ampere-and-later-devices (Triggered internally at /home/pytorch/aten/src/ATen/Context.cpp:80.)
+  _C._set_float32_matmul_precision(precision)
+
+2026-06-16 07:51:27 | warnings | 140184350237120 | WARNING : /usr/local/lib/python3.10/dist-packages/torch/__init__.py:1617: UserWarning: Please use the new API settings to control TF32 behavior, such as torch.backends.cudnn.conv.fp32_precision = 'tf32' or torch.backends.cuda.matmul.fp32_precision = 'ieee'. Old settings, e.g, torch.backends.cuda.matmul.allow_tf32 = True, torch.backends.cudnn.allow_tf32 = True, allowTF32CuDNN() and allowTF32CuBLAS() will be deprecated after Pytorch 2.9. Please see https://pytorch.org/docs/main/notes/cuda.html#tensorfloat-32-tf32-on-ampere-and-later-devices (Triggered internally at /home/pytorch/aten/src/ATen/Context.cpp:80.)
+  _C._set_float32_matmul_precision(precision)
+
+INFO:vllm.distributed.parallel_state:world_size=1 rank=0 local_rank=0 distributed_init_method=tcp://10.10.142.146:33927 backend=mccl
+2026-06-16 07:51:27 | parallel_state | 140184350237120 | INFO : world_size=1 rank=0 local_rank=0 distributed_init_method=tcp://10.10.142.146:33927 backend=mccl
+INFO:vllm.distributed.parallel_state:rank 0 in world size 1 is assigned as DP rank 0, PP rank 0, PCP rank 0, TP rank 0, EP rank N/A, EPLB rank N/A
+2026-06-16 07:51:27 | parallel_state | 140184350237120 | INFO : rank 0 in world size 1 is assigned as DP rank 0, PP rank 0, PCP rank 0, TP rank 0, EP rank N/A, EPLB rank N/A
+ERROR:vllm.v1.engine.core:EngineCore failed to start.
+Traceback (most recent call last):
+  File "/root/.virtualenvs/sglang-0.5.6/lib/python3.10/site-packages/vllm/v1/engine/core.py", line 1110, in run_engine_core
+    engine_core = EngineCoreProc(*args, engine_index=dp_rank, **kwargs)
+  File "/root/.virtualenvs/sglang-0.5.6/lib/python3.10/site-packages/vllm/v1/engine/core.py", line 876, in __init__
+    super().__init__(
+  File "/root/.virtualenvs/sglang-0.5.6/lib/python3.10/site-packages/vllm/v1/engine/core.py", line 118, in __init__
+    self.model_executor = executor_class(vllm_config)
+  File "/root/.virtualenvs/sglang-0.5.6/lib/python3.10/site-packages/vllm/v1/executor/abstract.py", line 109, in __init__
+    self._init_executor()
+  File "/root/.virtualenvs/sglang-0.5.6/lib/python3.10/site-packages/vllm/v1/executor/uniproc_executor.py", line 47, in _init_executor
+    self.driver_worker.init_device()
+  File "/root/.virtualenvs/sglang-0.5.6/lib/python3.10/site-packages/vllm/v1/worker/worker_base.py", line 317, in init_device
+    self.worker.init_device()  # type: ignore
+  File "/root/.virtualenvs/sglang-0.5.6/lib/python3.10/site-packages/vllm/v1/worker/gpu_worker.py", line 279, in init_device
+    torch.accelerator.empty_cache()
+  File "/usr/local/lib/python3.10/dist-packages/torch/accelerator/memory.py", line 28, in empty_cache
+    if not torch._C._accelerator_isAllocatorInitialized():
+RuntimeError: device_allocator INTERNAL ASSERT FAILED at "/home/pytorch/c10/core/CachingDeviceAllocator.h":109, please report a bug to PyTorch. Allocator for musa is not a DeviceAllocator.
+2026-06-16 07:51:28 | core | 140184350237120 | ERROR : EngineCore failed to start.
+Traceback (most recent call last):
+  File "/root/.virtualenvs/sglang-0.5.6/lib/python3.10/site-packages/vllm/v1/engine/core.py", line 1110, in run_engine_core
+    engine_core = EngineCoreProc(*args, engine_index=dp_rank, **kwargs)
+  File "/root/.virtualenvs/sglang-0.5.6/lib/python3.10/site-packages/vllm/v1/engine/core.py", line 876, in __init__
+    super().__init__(
+  File "/root/.virtualenvs/sglang-0.5.6/lib/python3.10/site-packages/vllm/v1/engine/core.py", line 118, in __init__
+    self.model_executor = executor_class(vllm_config)
+  File "/root/.virtualenvs/sglang-0.5.6/lib/python3.10/site-packages/vllm/v1/executor/abstract.py", line 109, in __init__
+    self._init_executor()
+  File "/root/.virtualenvs/sglang-0.5.6/lib/python3.10/site-packages/vllm/v1/executor/uniproc_executor.py", line 47, in _init_executor
+    self.driver_worker.init_device()
+  File "/root/.virtualenvs/sglang-0.5.6/lib/python3.10/site-packages/vllm/v1/worker/worker_base.py", line 317, in init_device
+    self.worker.init_device()  # type: ignore
+  File "/root/.virtualenvs/sglang-0.5.6/lib/python3.10/site-packages/vllm/v1/worker/gpu_worker.py", line 279, in init_device
+    torch.accelerator.empty_cache()
+  File "/usr/local/lib/python3.10/dist-packages/torch/accelerator/memory.py", line 28, in empty_cache
+    if not torch._C._accelerator_isAllocatorInitialized():
+RuntimeError: device_allocator INTERNAL ASSERT FAILED at "/home/pytorch/c10/core/CachingDeviceAllocator.h":109, please report a bug to PyTorch. Allocator for musa is not a DeviceAllocator.
+Process EngineCore:
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/multiprocessing/process.py", line 314, in _bootstrap
+    self.run()
+  File "/usr/lib/python3.10/multiprocessing/process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "/root/.virtualenvs/sglang-0.5.6/lib/python3.10/site-packages/vllm/v1/engine/core.py", line 1140, in run_engine_core
+    raise e
+  File "/root/.virtualenvs/sglang-0.5.6/lib/python3.10/site-packages/vllm/v1/engine/core.py", line 1110, in run_engine_core
+    engine_core = EngineCoreProc(*args, engine_index=dp_rank, **kwargs)
+  File "/root/.virtualenvs/sglang-0.5.6/lib/python3.10/site-packages/vllm/v1/engine/core.py", line 876, in __init__
+    super().__init__(
+  File "/root/.virtualenvs/sglang-0.5.6/lib/python3.10/site-packages/vllm/v1/engine/core.py", line 118, in __init__
+    self.model_executor = executor_class(vllm_config)
+  File "/root/.virtualenvs/sglang-0.5.6/lib/python3.10/site-packages/vllm/v1/executor/abstract.py", line 109, in __init__
+    self._init_executor()
+  File "/root/.virtualenvs/sglang-0.5.6/lib/python3.10/site-packages/vllm/v1/executor/uniproc_executor.py", line 47, in _init_executor
+    self.driver_worker.init_device()
+  File "/root/.virtualenvs/sglang-0.5.6/lib/python3.10/site-packages/vllm/v1/worker/worker_base.py", line 317, in init_device
+    self.worker.init_device()  # type: ignore
+  File "/root/.virtualenvs/sglang-0.5.6/lib/python3.10/site-packages/vllm/v1/worker/gpu_worker.py", line 279, in init_device
+    torch.accelerator.empty_cache()
+  File "/usr/local/lib/python3.10/dist-packages/torch/accelerator/memory.py", line 28, in empty_cache
+    if not torch._C._accelerator_isAllocatorInitialized():
+RuntimeError: device_allocator INTERNAL ASSERT FAILED at "/home/pytorch/c10/core/CachingDeviceAllocator.h":109, please report a bug to PyTorch. Allocator for musa is not a DeviceAllocator.
+[rank0]:[W616 07:51:28.243301987 ProcessGroupMCCL.cpp:1095] Warning: WARNING: destroy_process_group() was not called before program exit, which can leak resources. For more info, please see https://pytorch.org/docs/stable/distributed.html#shutdown (function operator())
+Traceback (most recent call last):
+  File "/root/.virtualenvs/sglang-0.5.6/bin/vllm", line 6, in <module>
+    sys.exit(main())
+  File "/root/.virtualenvs/sglang-0.5.6/lib/python3.10/site-packages/vllm/entrypoints/cli/main.py", line 92, in main
+    args.dispatch_function(args)
+  File "/root/.virtualenvs/sglang-0.5.6/lib/python3.10/site-packages/vllm/entrypoints/cli/serve.py", line 122, in cmd
+    uvloop.run(run_server(args))
+  File "/root/.virtualenvs/sglang-0.5.6/lib/python3.10/site-packages/uvloop/__init__.py", line 69, in run
+    return loop.run_until_complete(wrapper())
+  File "uvloop/loop.pyx", line 1518, in uvloop.loop.Loop.run_until_complete
+  File "/root/.virtualenvs/sglang-0.5.6/lib/python3.10/site-packages/uvloop/__init__.py", line 48, in wrapper
+    return await main
+  File "/root/.virtualenvs/sglang-0.5.6/lib/python3.10/site-packages/vllm/entrypoints/openai/api_server.py", line 678, in run_server
+    await run_server_worker(listen_address, sock, args, **uvicorn_kwargs)
+  File "/root/.virtualenvs/sglang-0.5.6/lib/python3.10/site-packages/vllm/entrypoints/openai/api_server.py", line 692, in run_server_worker
+    async with build_async_engine_client(
+  File "/usr/lib/python3.10/contextlib.py", line 199, in __aenter__
+    return await anext(self.gen)
+  File "/root/.virtualenvs/sglang-0.5.6/lib/python3.10/site-packages/vllm/entrypoints/openai/api_server.py", line 100, in build_async_engine_client
+    async with build_async_engine_client_from_engine_args(
+  File "/usr/lib/python3.10/contextlib.py", line 199, in __aenter__
+    return await anext(self.gen)
+  File "/root/.virtualenvs/sglang-0.5.6/lib/python3.10/site-packages/vllm/entrypoints/openai/api_server.py", line 136, in build_async_engine_client_from_engine_args
+    async_llm = AsyncLLM.from_vllm_config(
+  File "/root/.virtualenvs/sglang-0.5.6/lib/python3.10/site-packages/vllm/v1/engine/async_llm.py", line 217, in from_vllm_config
+    return cls(
+  File "/root/.virtualenvs/sglang-0.5.6/lib/python3.10/site-packages/vllm/v1/engine/async_llm.py", line 146, in __init__
+    self.engine_core = EngineCoreClient.make_async_mp_client(
+  File "/root/.virtualenvs/sglang-0.5.6/lib/python3.10/site-packages/vllm/v1/engine/core_client.py", line 130, in make_async_mp_client
+    return AsyncMPClient(*client_args)
+  File "/root/.virtualenvs/sglang-0.5.6/lib/python3.10/site-packages/vllm/v1/engine/core_client.py", line 900, in __init__
+    super().__init__(
+  File "/root/.virtualenvs/sglang-0.5.6/lib/python3.10/site-packages/vllm/v1/engine/core_client.py", line 535, in __init__
+    with launch_core_engines(
+  File "/usr/lib/python3.10/contextlib.py", line 142, in __exit__
+    next(self.gen)
+  File "/root/.virtualenvs/sglang-0.5.6/lib/python3.10/site-packages/vllm/v1/engine/utils.py", line 1119, in launch_core_engines
+    wait_for_engine_startup(
+  File "/root/.virtualenvs/sglang-0.5.6/lib/python3.10/site-packages/vllm/v1/engine/utils.py", line 1178, in wait_for_engine_startup
+    raise RuntimeError(
+RuntimeError: Engine core initialization failed. See root cause above. Failed core proc(s): {}

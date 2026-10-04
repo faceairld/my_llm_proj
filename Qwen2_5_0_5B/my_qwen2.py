@@ -10,6 +10,7 @@ os.environ['CUDA_LAUNCH_BLOCKING'] = '1'
 current_dir = os.path.dirname(os.path.abspath(__file__))
 cu_file_path = os.path.join(current_dir, "csrc", "rmsnorm_kernel.cu")
 my_attention_path = os.path.join(current_dir,"csrc", "my_decode_attention.cu")
+my_flash_decoding_attention_path = os.path.join(current_dir,"csrc", "my_flash_decoding.cu")
 my_flash_attention_path = os.path.join(current_dir,"csrc","my_flash_attention.cu")
 my_flash_attention_path_v2 = os.path.join(current_dir,"csrc","my_flash_attention_v2.cu")
 
@@ -22,6 +23,12 @@ custom_rmsnorm_cuda = load(
 custom_attention_cuda = load(
     name = "my_attention_cuda",
     sources=[my_attention_path],
+    verbose=True
+)
+
+custom_flash_decoding_cuda = load(
+    name = "my_flash_decoding_cuda",
+    sources=[my_flash_decoding_attention_path],
     verbose=True
 )
 
@@ -255,7 +262,13 @@ class MyQwenAttention(nn.Module):
             attention = custom_flash_attention_cuda_v2.forward(q_after_emb.contiguous(), k_calculate.contiguous(), v_calculate.contiguous())
             
         else:
-            attention = custom_attention_cuda.forward(self.k_cache, self.v_cache, q_after_emb.contiguous(), seq_len_t)
+             if(current_seq_len > 256):
+                attention = custom_flash_decoding_cuda.forward(self.k_cache, self.v_cache, q_after_emb.contiguous(), seq_len_t)
+             else:
+                attention = custom_attention_cuda.forward(self.k_cache, self.v_cache, q_after_emb.contiguous(), seq_len_t)
+                
+            
+            
 
 
 

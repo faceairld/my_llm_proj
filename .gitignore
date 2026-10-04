@@ -1,2 +1,9 @@
 Qwen2_5_0_5B/modeel_dir/
 Fashion-mnist/
+
+# Local browser profile used by diagnostic rendering (cookies and session data).
+/output/codex-diagnostics/edge-render-profile/
+
+# Generated CUDA practice test inputs and outputs stay local.
+/cuda_pratice/**/input*.txt
+/cuda_pratice/**/output*.txt

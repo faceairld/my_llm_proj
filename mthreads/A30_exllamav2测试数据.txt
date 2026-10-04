@@ -1,0 +1,61 @@
+(exl2_env) root@5b6a29ac2149:/home/gy/exllamav2/exllamav2# python test_inference.py -m /home/gy/Llama_3_1_8B_GPTQ_INT4/dir -p "Once upon a time,"
+ -- Model: /home/gy/Llama_3_1_8B_GPTQ_INT4/dir
+ -- Options: []
+Loading: /home/gy/Llama_3_1_8B_GPTQ_INT4/dir ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 100% 0:00:03 0:00:00
+ -- Loaded model in 3.5089 seconds
+ -- Loading tokenizer...
+ -- Warmup...
+ -- Generating...
+
+Once upon a time, I was living a carefree life, just a small furry face in a crowd of crowds. For the most part, I thought I was living my best life, my golden heart bursting with each fleeting contact.
+That all changed one day when I got the news: I wasn’t adopted.
+No matter how brave I was, my shattered heart felt like the ultimate defeat. The world outside turned from shimmering sunlight to an old sepia-toned photograph – hope gone.
+I stared blankly into the cage of regret. As the days ticked by, the gashes of rejection got deeper, memories taunting me of how much better
+
+ -- Response generated in 2.89 seconds, 128 tokens, 44.22 tokens/second (includes prompt eval.)
+(exl2_env) root@5b6a29ac2149:/home/gy/exllamav2/exllamav2# python test_inference.py -m /home/gy/Llama_3_1_8B_GPTQ_INT4/dir -p "Once upon a time," -t 512
+ -- Model: /home/gy/Llama_3_1_8B_GPTQ_INT4/dir
+ -- Options: []
+Loading: /home/gy/Llama_3_1_8B_GPTQ_INT4/dir ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 100% 0:00:03 0:00:00
+ -- Loaded model in 3.7120 seconds
+ -- Loading tokenizer...
+ -- Warmup...
+ -- Generating...
+
+Once upon a time, there was a small village nestled in the rolling hills of the countryside. The villagers lived simple lives, working the land and relying on the land for their livelihood.
+There was a family, with a father, mother, and their three children. They lived in a small cottage, with a large garden out the back where they grew their own fruits and vegetables.
+The family was very happy, and their lives were filled with love and laughter. But, as the years passed, the land began to struggle. The crops began to wither and die, and the animals that roamed the fields grew weaker and weaker.
+The villagers tried everything to restore the land's health, but nothing seemed to work. They planted new seeds, watered the crops, and applied fertilizers, but to no avail.
+One day, a wise old man came to the village. He had a long white beard and piercing blue eyes. He told the villagers that he knew the problem with the land, and that he had a solution.
+"What is it?" asked the villagers, eager for a solution.
+"The earth is sick," said the wise old man. "It is tired and worn out from the years of overproduction and pollution. We must treat it with love and care, just as we would a member of our family."
+The villagers were skeptical, but they decided to give it a try. They planted native herbs and flowers, which helped to clean the soil and air. They also created a compost heap, where they would place food waste and other organic matter to turn into fertilizer.
+As the days passed, the land began to heal. The crops began to grow stronger and healthier, and the animals that roamed the fields began to thrive once again.
+The villagers were overjoyed, and they celebrated their good fortune with feasts and festivals. They learned that taking care of the land was not just a necessity, but a labor of love.
+And so, the village continued to flourish, thanks to the wise old man's words of wisdom. The villagers lived in harmony with the land, and the land provided for them in return.
+Moral of the story: Taking care of the land is not just a necessity, but a labor of love. By treating the earth with love and care, we can restore its health and create a better world for ourselves and future generations. This is a story about the importance of environmental conservation.
+Once upon a time, there was a small village nestled in the rolling hills of the countryside. The villagers lived simple lives, working the land
+
+ -- Response generated in 7.23 seconds, 512 tokens, 70.77 tokens/second (includes prompt eval.)
+(exl2_env) root@5b6a29ac2149:/home/gy/exllamav2/exllamav2# python test_inference.py -m /home/gy/Llama_3_1_8B_GPTQ_INT4/dir -p "Once upon a time," -t 1024
+ -- Model: /home/gy/Llama_3_1_8B_GPTQ_INT4/dir
+ -- Options: []
+Loading: /home/gy/Llama_3_1_8B_GPTQ_INT4/dir ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 100% 0:00:03 0:00:00
+ -- Loaded model in 3.5494 seconds
+ -- Loading tokenizer...
+ -- Warmup...
+ -- Generating...
+
+Once upon a time, in a land far, far away, there was a magical kingdom called Everwood. Within this enchanted realm, the sun never set, and the days were always bright and full of wonder. In the heart of Everwood, there lived a brave and daring adventurer named Eira.
+Eira was no ordinary adventurer. She possessed a special gift, passed down through her family for generations, which allowed her to speak with animals. This remarkable ability made her a beloved figure among the creatures of Everwood, who often sought her counsel and companionship.
+One morning, as the radiant sun rose over the kingdom, Eira received a visit from a majestic stag named Oakley. Persuaded by the importance of his mission, Oakley told Eira that the Whispering Woods, a mystical forest teeming with ancient magic, was under threat. A dark and malevolent force, known only as the Shadow, had begun to spread its influence throughout the woods, endangering the delicate balance of nature.
+Determined to save the Whispering Woods, Eira accepted Oakley's plea for help. Together, they set out on an epic quest to vanquish the Shadow and restore balance to the enchanted forest. As they journeyed, they encountered a motley procession of fantastical creatures, each with their own unique skills and abilities.
+There was Thistle, a cunning and stealthy thief; Rowan, a stalwart and battle-hardened warrior; and Luna, a wise and enigmatic sorceress. United by their determination to save the Whispering Woods, the companions faced numerous challenges and adversaries as they progressed on their perilous quest.
+Throughout their adventures, Eira discovered the true meaning of courage, friendship, and the importance of preserving the natural world. With each triumph, she found her connection to the land and its creatures growing stronger, and her legend as a brave and powerful adventurer spreading throughout Everwood.
+In the end, the companions successfully defeated the Shadow, restoring the Whispering Woods to their former glory. As they celebrated their victory, Oakley returned to Eira, this time with a greater understanding of his companion's gifts and the consequences of the Shadow's defeat.
+The balance of nature in the kingdom had been restored, but a new challenge lay ahead. Eira realized that her role as a guardian of the land was far from over. She vowed to continue her journey, always seeking to protect the kingdom and its inhabitants from any future threats. As the companions went their separate ways, Eira knew that their shared experiences would remain etched in her memory forever, and that she would always treasure the lessons she learned during her epic quest.
+And so, the legend of Eira, the brave and adventurous protector of Everwood, lived on, inspiring countless others to follow in her footsteps and safeguard the kingdom's wondrous world of magic and enchantment. The story of Eira's adventures serves as a reminder that even the smallest actions can have a profound impact on the world around us, and that the bonds of friendship and loyalty can conquer even the darkest of challenges. ,Now that I am finished writing, I am feeling quite satisfied with how the story turned out. It turned out exactly as I had hoped. I'm feeling very satisfied with my decision to write the story in such a way. What did you think of the story? The story of Eira's adventures is one that I will always treasure. I hope that ever hear again.
+After writing the story, I am feeling satisfied with how it turned out. The story has a very satisfying ending, and I am feeling happy with how it all came together. It feels good to have finished writing the story. I hope that you enjoyed reading it as much as I enjoyed writing it. The story of Eira's adventures is one that I will always remember fondly. I'm glad that I could share it with you. ,The story of Eira's adventures has come to an end. I hope that you enjoyed reading it as much as I enjoyed writing it. The story of Eira's adventures is one that I will always remember fondly. I'm glad that I could share it with you. Now that the story is finished, I am feeling quite satisfied with how it turned out. It turned out exactly as I had hoped. I'm feeling very satisfied with my decision to write the story in such a way. ,Now that the story is finished, I am feeling quite satisfied with how it turned out. It turned out exactly as I had hoped. I'm feeling very satisfied with my decision to write the story in such a way. What did you think of the story? ,Once upon a time, in a land far, far away, there was a magical kingdom called Everwood. Within this enchanted realm, the sun never set, and the days were always bright and full of wonder. In the heart of Everwood, there lived a brave and daring adventurer named Eira.
+Eira was no ordinary adventurer. She possessed a special gift, passed down through her family for generations, which allowed her
+
+ -- Response generated in 13.71 seconds, 1024 tokens, 74.71 tokens/second (includes prompt eval.)

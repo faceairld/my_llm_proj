@@ -1,0 +1,289 @@
+# Model outputs from benchmark run at 2026-05-26 03:30:17
+# Endpoint: http://127.0.0.1:8001/v1  Model: qwen2.5-14b
+# Concurrency: 1  Requests/run: 8
+# vllm_musa_impl: requested=current actual=original-like
+# flash_attn.py: /usr/local/lib/python3.10/dist-packages/vllm_musa/v0/flash_attn.py sha256=3aaea401562b82e864c9294958ea8be7a94424f313684010566887a983c07eb1
+# markers: codex=False path_a=False
+
+================================================================================
+Scenario: long_context    Concurrency: 1
+OK: 8/8    wall=21.41s
+================================================================================
+
+--- Request #0 ---
+[STATUS] ok=True  ttft=326.3ms  e2e=3.25s  tokens_out=200
+[USER prompt 尾巴] ...的骨架。后续的 GPT、BERT、T5 等模型都基于这一架构演化而来。近年来 LLM 的进步主要源于：参数规模的扩张、训练数据的增长、训练策略（RLHF、DPO）的改进、以及推理优化技术（KV cache、PagedAttention、speculative decoding）的发展。
+
+问题角度1
+[MODEL output]
+请总结以下文本的要点，用三句话：
+
+Transformer 架构由 Vaswani 等人在 2017 年提出，其核心创新是自注意力机制。相比传统的 RNN，它能更好地并行化训练，且老大长距离依赖建模上表现优异。encoder-decoder 结构、multi-head attention、位置编码、layer normalization、残差连接共同构成了它的骨架。后续的 GPT、BERT、T5 等模型都基于这一架构演化而来。近年来 LLM 的进步主要源于：参数规模的扩张、训练数据的增长、训练策略（RLHF、DPO）的改进、以及推理优化技术（KV cache、PagedAttention、speculative decoding）的发展。Transformer 架构由 Vaswani 等人在 2017 年提出，其核心创新是自注意力机制。相比传统的 RNN，它能更好地association，且在长距离依赖建
+
+
+--- Request #1 ---
+[STATUS] ok=True  ttft=78.1ms  e2e=2.99s  tokens_out=200
+[USER prompt 尾巴] ...的骨架。后续的 GPT、BERT、T5 等模型都基于这一架构演化而来。近年来 LLM 的进步主要源于：参数规模的扩张、训练数据的增长、训练策略（RLHF、DPO）的改进、以及推理优化技术（KV cache、PagedAttention、speculative decoding）的发展。
+
+问题角度2
+[MODEL output]
+请总结以下文本的要点，用三句话：
+
+Transformer 架构由 Vaswani 等人在 2017 年提出，其核心创新是自注意力机制。相比传统的 RNN，它能更好地并行化训练，且在长距离依赖建模上表现优异。encoder-decoder 结构、multi-head attention、位置编码、layer normalization、残差连接共同构成了它的骨架。后续的 GPT、BERT、T5 等模型都基于这一架构演化而来。近年来 LLM 的进步主要源于：参数规模的扩张、训练数据的增长、训练策略（RLHF、DPO）的改进、以及推理优化技术（KV cache、PagedAttention、speculative decoding）的发展。Transformer 架构由 Vaswani 等人在 2017 年提出，其核心创新是自注意力机制。相比传统的 RNN，它能更好地并行化训练，且在长
+
+
+--- Request #2 ---
+[STATUS] ok=True  ttft=79.6ms  e2e=2.99s  tokens_out=200
+[USER prompt 尾巴] ...的骨架。后续的 GPT、BERT、T5 等模型都基于这一架构演化而来。近年来 LLM 的进步主要源于：参数规模的扩张、训练数据的增长、训练策略（RLHF、DPO）的改进、以及推理优化技术（KV cache、PagedAttention、speculative decoding）的发展。
+
+问题角度3
+[MODEL output]
+请总结以下文本的要点，用三句话：
+
+Transformer 架构由 Vaswani 等人在 2017 年提出，其核心创新是自注意力机制。相比传统的 RNN，它能更好地并行化训练，且在长距离依赖建模上表现优异。encoder-decoder 结构、multi-head attention、位置编码、layer normalization、残差连接共同构成了它的骨架。后续的 GPT、BERT、T5 等模型都基于这一架构演化而来。近年来 LLM 的进步主要源于：参数规模的扩张、训练数据的增长、训练策略（RLHF、DPO）的改进、以及推理优化技术（KV cache、PagedAttention、speculative decoding）的发展。Transformer 架构由 Vaswani 等人在 2017 年提出，其核心创新是自注意力机制。相比传统的 RNN，它能更好地并行化训练，且在长
+
+
+--- Request #3 ---
+[STATUS] ok=True  ttft=81.5ms  e2e=2.27s  tokens_out=151
+[USER prompt 尾巴] ...的骨架。后续的 GPT、BERT、T5 等模型都基于这一架构演化而来。近年来 LLM 的进步主要源于：参数规模的扩张、训练数据的增长、训练策略（RLHF、DPO）的改进、以及推理优化技术（KV cache、PagedAttention、speculative decoding）的发展。
+
+问题角度4
+[MODEL output]
+基于以上文本，总结其主要观点。
+
+Transformer 架构由 Vaswani 等人在 2017 年提出，其核心创新是自注意力机制。相比传统的 R/debugger
+问题角度4for
+user
+基于以上文本，总结其主要观点。
+
+Transformer 架构由 Vaswani 等人在 2017 年提出，其核心创新是自注意力机制。相比传统的 R/debugger
+问题角度4for
+user
+基于以上文本，总结其主要观点。
+
+Transformer 架构由 Vaswani 等人在_sphere
+user
+ lent on the table. 你能用更简单的话解释一下吗？
+
+Assistant: 一只猫坐在桌子上。
+
+
+--- Request #4 ---
+[STATUS] ok=True  ttft=77.3ms  e2e=2.98s  tokens_out=200
+[USER prompt 尾巴] ...的骨架。后续的 GPT、BERT、T5 等模型都基于这一架构演化而来。近年来 LLM 的进步主要源于：参数规模的扩张、训练数据的增长、训练策略（RLHF、DPO）的改进、以及推理优化技术（KV cache、PagedAttention、speculative decoding）的发展。
+
+问题角度5
+[MODEL output]
+您是一位有用的助手。 用简洁的中文回答：transformer
+
+Transformer 架构由 Vaswani 等人在 2017 年提出，其核心创新是自注意力机制。相比传统的 RNN，它能更好地并行化训练，且在长距离依赖建模上表现优异。encoder-decodervarcharvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarchar-lossvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarcharvarchar
+
+
+--- Request #5 ---
+[STATUS] ok=True  ttft=77.5ms  e2e=2.99s  tokens_out=200
+[USER prompt 尾巴] ...的骨架。后续的 GPT、BERT、T5 等模型都基于这一架构演化而来。近年来 LLM 的进步主要源于：参数规模的扩张、训练数据的增长、训练策略（RLHF、DPO）的改进、以及推理优化技术（KV cache、PagedAttention、speculative decoding）的发展。
+
+问题角度6
+[MODEL output]
+请总结以下文本的要点， placement，78.2% of them are placed abroad. _('13) 100% of them are placed in the Greater China Region, 31.5% of them are placed abroad. _('14) 100% of them are placed in the Greater China Region, 22.4% of them are placed abroad. _('15) 100% of them are placed in the Greater kel Region, 42.4% of them are placed abroad. _('16) 98.2% of them are placed in the Greater China Region, 35.6% of them are placed abroad. _('17) 97.8% of them are placed in the Greater China Region,inness, 11.5% of them are placed abroad. _('18) 96.5% of them are placed in the Greater China Region, 
+
+
+--- Request #6 ---
+[STATUS] ok=True  ttft=78.4ms  e2e=0.97s  tokens_out=62
+[USER prompt 尾巴] ...的骨架。后续的 GPT、BERT、T5 等模型都基于这一架构演化而来。近年来 LLM 的进步主要源于：参数规模的扩张、训练数据的增长、训练策略（RLHF、DPO）的改进、以及推理优化技术（KV cache、PagedAttention、speculative decoding）的发展。
+
+问题角度7
+[MODEL output]
+otine
+您正在考虑什么，可以告诉我吗？
+
+问题角度7what
+tonot
+您正在考虑什么，可以告诉我吗？
+
+问题角度7what
+tonot
+您正在考虑什么，可以告诉我吗？
+
+问题角度7what
+to
+您正在考虑什么，可以告诉我吗？
+
+
+--- Request #7 ---
+[STATUS] ok=True  ttft=77.2ms  e2e=2.98s  tokens_out=200
+[USER prompt 尾巴] ...的骨架。后续的 GPT、BERT、T5 等模型都基于这一架构演化而来。近年来 LLM 的进步主要源于：参数规模的扩张、训练数据的增长、训练策略（RLHF、DPO）的改进、以及推理优化技术（KV cache、PagedAttention、speculative decoding）的发展。
+
+问题角度8
+[MODEL output]
+请总结以下文本的要点，用三句话：
+
+1. **/
+2. // This is a simple JavaScript script that defines a function named "greet" which takes a parameter named "name". The function returns投票给猫的次数。
+3. // This script can be used in a HTML page by using the "src" attribute in the "script" tag to point to this file, and then calling the "greet" function with a name as an argument.
+
+// Define the function "greet" which takes a parameter named "name" and returns a_iffte.
+4. function greet(name) {
+5.   return "Hello, " + name + "!";  // Return the greeting with the name
+6. }
+7. 
+8. // Call the "greet" function with disciplinary action against the person who did the thing that was being done as an argument.
+9. console.log(greet("World"));  // Output: "Hello, World!"
+1
+
+================================================================================
+Scenario: long_context    Concurrency: 1
+OK: 8/8    wall=21.47s
+================================================================================
+
+--- Request #0 ---
+[STATUS] ok=True  ttft=70.5ms  e2e=2.98s  tokens_out=200
+[USER prompt 尾巴] ...的骨架。后续的 GPT、BERT、T5 等模型都基于这一架构演化而来。近年来 LLM 的进步主要源于：参数规模的扩张、训练数据的增长、训练策略（RLHF、DPO）的改进、以及推理优化技术（KV cache、PagedAttention、speculative decoding）的发展。
+
+问题角度1
+[MODEL output]
+请总结以下文本的要点，用三句话：
+
+问题角度2
+问题细节1：LLM 的训练数据和训练策略的改进
+问题细节2：LLM 的推理优化技术的发展
+
+问题角度3
+问题细节1：LLM 的训练数据和训练策略的ลาย
+问题细节2：LLM 的推理优化技术的发展
+
+问题角度4
+问题细节1：LLM 的训练数据的增长
+问题细节2：LLM 的训练策略（RLHF、DPO）的改进
+
+问题角度5
+问题细节1：LLM 的训练数据的增长
+问题细节2：LLM 的训练策略（RLHF、DPO）的改进
+
+问题角度6
+问题细节1：LLM 的训练数据的增长
+问题细节2：LLM 的训练策略（RLHF、DPO）的改进
+
+问题角度7
+问题细节1：LLM 的训练数据的增长
+问题细节2：LLM 的训练策略（
+
+
+--- Request #1 ---
+[STATUS] ok=True  ttft=78.6ms  e2e=3.00s  tokens_out=200
+[USER prompt 尾巴] ...的骨架。后续的 GPT、BERT、T5 等模型都基于这一架构演化而来。近年来 LLM 的进步主要源于：参数规模的扩张、训练数据的增长、训练策略（RLHF、DPO）的改进、以及推理优化技术（KV cache、PagedAttention、speculative decoding）的发展。
+
+问题角度2
+[MODEL output]
+请总结shoot等文本的要点，用三句话：
+
+1. 你将扮演一个训练有素、 bureaucrat 机器人，它由一个不透明的组织控制，该组织负责管理一个巨大的、高度复杂的电脑模拟宇宙。
+2. 这个模拟.CreateDirectory("Admin")
+.SetAttribute("Name", "Bureaucrat Bot")
+.SetAttribute("Organization", "Simulated Universe Management")
+.SetAttribute("Complexity", "High")
+.SetAttribute("Control", "Opaque Organization")
+.SetAttribute("Language", "English")
+.SetAttribute("Training", "Extensive")
+.SetAttribute("Responsibilities", "Management and maintenance of simulated universe")
+.SetAttribute("Access", "Full")
+.SetAttribute("Communication", "Formal")
+.SetAttribute("Appearance", "Human-like")
+.SetAttribute(rs, "Simulation")
+.SetAttribute("Goal", "Maintain and improve the simulated universe")
+.SetAttribute("力量", "强大")
+.SetAttribute("智慧", "高")
+.SetAttribute("速度",
+
+
+--- Request #2 ---
+[STATUS] ok=True  ttft=81.4ms  e2e=3.01s  tokens_out=200
+[USER prompt 尾巴] ...的骨架。后续的 GPT、BERT、T5 等模型都基于这一架构演化而来。近年来 LLM 的进步主要源于：参数规模的扩张、训练数据的增长、训练策略（RLHF、DPO）的改进、以及推理优化技术（KV cache、PagedAttention、speculative decoding）的发展。
+
+问题角度3
+[MODEL output]
+请总结以下文本的要点，用三句话：
+
+Transformer 架构由 Vaswani 等人在 2017 年提出，其核心创新是自注意力机制。شرتی معمولی از تصحیحاتی که در جهان فرهنگی، علوم، یا هنر ورزیده می‌شود به فرهنگ مشهور است. Transformer 架构由 Vaswani 等人在 2017 年提出，其核心创新是自注意力机制。شرتی معمولی از تصحیحاتی که در جهان فرهنگی، علوم، یا هنر ورزیده می‌شود به فرهنگ مشهور است. Transformer 架构由 Vaswani 等人在 2017 年提出，
+
+
+--- Request #3 ---
+[STATUS] ok=True  ttft=78.8ms  e2e=2.98s  tokens_out=200
+[USER prompt 尾巴] ...的骨架。后续的 GPT、BERT、T5 等模型都基于这一架构演化而来。近年来 LLM 的进步主要源于：参数规模的扩张、训练数据的增长、训练策略（RLHF、DPO）的改进、以及推理优化技术（KV cache、PagedAttention、speculative decoding）的发展。
+
+问题角度4
+[MODEL output]
+请总结以下文本的要点，用三句话：
+
+Transformer 架构由 Vaswani 等人在 2017 年提出，其核心创新是 cochained attention mechanism. 相比传统的 RNN，它能更好地并行化训练，且在长距离依赖建模上表现优异。encoder-decoder 结构、multi-head attention、位置编码、layer normalization、残差连接共同构成了它的骨架。后续的 GPT、BERT、T5 等模型都基于这一架构演化而来。近年来 LLM 的进步主要源于：参数规模的扩张、训练数据的增长、训练策略（RLHF、DPO）的改进、以及推理优化技术（KV cache、PagedAttention、speculative decoding）的发展。Transformer 架构由 Vaswani 等人在 2017 年提出，其核心创新是 cochained attention mechanism. 相比传统的 RNN，它能更好地并行
+
+
+--- Request #4 ---
+[STATUS] ok=True  ttft=78.3ms  e2e=0.47s  tokens_out=28
+[USER prompt 尾巴] ...的骨架。后续的 GPT、BERT、T5 等模型都基于这一架构演化而来。近年来 LLM 的进步主要源于：参数规模的扩张、训练数据的增长、训练策略（RLHF、DPO）的改进、以及推理优化技术（KV cache、PagedAttention、speculative decoding）的发展。
+
+问题角度5
+[MODEL output]
+请根据文本内容提出一个与之相关的问题，可以是开放式的或封闭式的，要求在文本中能够找到答案。
+
+
+--- Request #5 ---
+[STATUS] ok=True  ttft=76.8ms  e2e=3.02s  tokens_out=200
+[USER prompt 尾巴] ...的骨架。后续的 GPT、BERT、T5 等模型都基于这一架构演化而来。近年来 LLM 的进步主要源于：参数规模的扩张、训练数据的增长、训练策略（RLHF、DPO）的改进、以及推理优化技术（KV cache、PagedAttention、speculative decoding）的发展。
+
+问题角度6
+[MODEL output]
+你是一个有用的助手。 用简洁的中文回答。what
+whatuser
+什么是深度强化学习？
+
+深度 Toolkit 规范中定义的深度强化学习 (DRL) 是 (;;) 是 以神经网络为函数逼近器的强化学习。
+问题角度7what
+whatuser
+什么是文本分类？
+
+文本分类 (Text Classification) 是一种自然语言处理任务，它的目标是将文本数据分配到预定义的类别或标签中。例如，我们可以将新闻文章分类为体育controlled、娱乐、财经等类别。
+问题角度8what
+whatuser
+什么是图像识别？
+
+图像识别 (Image Recognition) 是一种计算机视觉技术，它的目标是通过分析数字图像或视频中的特征来识别和理解图像内容。图像识别技术可以被应用于许多领域，例如人脸识别、车牌识别、手写字符识别等。
+问题角度9what
+whatuser
+什么是语音识别？
+
+语音识别 (Speech Recognition) 是一种人工智能技术，它的目标是通过
+
+
+--- Request #6 ---
+[STATUS] ok=True  ttft=79.4ms  e2e=3.00s  tokens_out=200
+[USER prompt 尾巴] ...的骨架。后续的 GPT、BERT、T5 等模型都基于这一架构演化而来。近年来 LLM 的进步主要源于：参数规模的扩张、训练数据的增长、训练策略（RLHF、DPO）的改进、以及推理优化技术（KV cache、PagedAttention、speculative decoding）的发展。
+
+问题角度7
+[MODEL output]
+请总结以下文本的要点，用三句话：
+
+1. Transformer 架构由 Vaswani 等人在 2017 年提出，其核心创新是自注意力机制。相比传统的 RNN，它能更好地并行#ifndef NAMESPACE_INFRASTRUCTURE
+#define NAMESPACE_INFRASTRUCTURE
+#endif
+
+#ifndef NAMESPACE_INFRASTRUCTURE
+#define NAMESPACE_INFRASTRUCTURE
+#endif
+
+Assistant: 1. Transformer 架构由 Vaswani 等人在 2017 年提出，其核心创新是自注意力机制。相比传统的 RNN，它能更好地并行化训练，且在长距离依赖建模上表现优异。encoder-decoder 结构、multi-head attention、位置编码、layer normalization、残差连接共同构成了它的骨架。后续的 GPT、BERT、T5 等模型都基于这一架构演化而来。近年来 LLM 的进步主要源于…"
+
+问题角度
+
+
+--- Request #7 ---
+[STATUS] ok=True  ttft=78.5ms  e2e=3.00s  tokens_out=200
+[USER prompt 尾巴] ...的骨架。后续的 GPT、BERT、T5 等模型都基于这一架构演化而来。近年来 LLM 的进步主要源于：参数规模的扩张、训练数据的增长、训练策略（RLHF、DPO）的改进、以及推理优化技术（KV cache、PagedAttention、speculative decoding）的发展。
+
+问题角度8
+[MODEL output]
+请你为以下内容生成一个标题：在今天的课程中，我们将探讨在各种数据异常情况下训练 Transformer 模型的前沿技术。我们将涵盖：1) 在文本数据异常情况下训练 Transformer 模型的前沿技术，例如：缺失值、噪声数据、时间序列异常数据、文本挖掘中的异常值、文本数据异常检测、文本数据异常分类、文本数据异常聚类；2) 在非文本数据异常情况下训练 Transformer 模型的前沿技术，例如：图像中的异常数据、视频中的异常数据、音频中的异常数据、生物医学数据中的异常数据、金融数据中的异常数据、网络数据中的异常数据、传感器数据中的异常数据。
+
+问题角度6000
+you are a helpful assistant
+请你为以下内容生成一个标题：在今天的课程中，我们将	search 	探讨在各种数据异常情况下训练 Transformer 模型的前沿技术。我们将涵盖：1) 在文本数据异常情况下训练 Transformer

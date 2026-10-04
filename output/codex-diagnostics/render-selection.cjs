@@ -1,0 +1,28 @@
+const fs = require('fs');
+const path = require('path');
+const base = 'E:/vscode/Microsoft VS Code/2242ebbb54/resources/app/node_modules.asar/';
+for (const [source,target] of [
+  ['@xterm/xterm/lib/xterm.js','selection-xterm.js'],
+  ['@xterm/xterm/css/xterm.css','selection-xterm.css'],
+  ['@xterm/addon-webgl/lib/addon-webgl.js','selection-webgl.js']
+]) fs.writeFileSync(path.join(__dirname,target),fs.readFileSync(base+source));
+const html = `<!doctype html><meta charset="utf-8"><link rel="stylesheet" href="selection-xterm.css">
+<style>body{background:#0d1117;color:#ddd;font:16px sans-serif;margin:24px}section{margin:20px 0}h3{margin:12px 0}</style>
+<h2>Same installed VS Code renderer: reversed text selection</h2>
+<section><h3>A: current transparent background (#00000000)</h3><div id="a"></div></section>
+<section><h3>B: proposed opaque background (#0d1117)</h3><div id="b"></div></section>
+<script src="selection-xterm.js"></script><script src="selection-webgl.js"></script>
+<script>
+for(const [id,background] of [['a','#00000000'],['b','#0d1117']]){
+ const t=new Terminal({cols:72,rows:6,fontSize:20,fontFamily:'Consolas',allowTransparency:false,minimumContrastRatio:4.5,theme:{background,foreground:'#d4d4d4',green:'#50c878',red:'#ff6666',yellow:'#ffd75f'}});
+ t.open(document.getElementById(id));
+ try{t.loadAddon(new WebglAddon.WebglAddon())}catch(e){document.body.append(String(e))}
+ t.write('Normal text        Reversed selection\\r\\n'+
+ '\\x1b[32mGREEN TEXT         \\x1b[7mGREEN TEXT SELECTED\\x1b[0m\\r\\n'+
+ '\\x1b[31mRED TEXT           \\x1b[7mRED TEXT SELECTED\\x1b[0m\\r\\n'+
+ '\\x1b[33mYELLOW TEXT        \\x1b[7mYELLOW TEXT SELECTED\\x1b[0m\\r\\n'+
+ 'DEFAULT TEXT       \\x1b[7mDEFAULT TEXT SELECTED\\x1b[0m');
+}
+</script>`;
+fs.writeFileSync(path.join(__dirname,'selection-comparison.html'),html);
+console.log('Wrote selection-comparison.html using installed xterm renderer');

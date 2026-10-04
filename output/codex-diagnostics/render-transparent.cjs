@@ -1,0 +1,11 @@
+const fs = require('fs');
+const path = require('path');
+let html=fs.readFileSync(path.join(__dirname,'selection-comparison.html'),'utf8');
+html=html.replace('background:#0d1117;', 'background:linear-gradient(110deg,#142b2b,#34223c);');
+html=html.replace('Same installed VS Code renderer: reversed text selection','Preserve transparent background: renderer transparency support');
+html=html.replace('A: current transparent background (#00000000)','A: transparent theme, renderer transparency OFF (current)');
+html=html.replace('B: proposed opaque background (#0d1117)','B: same transparent theme, renderer transparency ON');
+html=html.replace("['b','#0d1117']", "['b','#00000000']");
+html=html.replace('allowTransparency:false','allowTransparency:id===\'b\'');
+fs.writeFileSync(path.join(__dirname,'selection-transparent.html'),html);
+console.log('Wrote selection-transparent.html');

@@ -1,0 +1,5 @@
+state=success
+exit_code=0
+detail=测试完成
+run_dir=/data/my_vllm_test/runs/20260528_023928_our
+updated_at=2026-05-28 02:41:10

@@ -1,0 +1,13 @@
+# 测试环境版本信息(2026-05-27)
+vllm_musa: 0.1.dev358+gd3980eddc.d20260323
+vllm:      0.9.3.dev0+ga5dd03c1e.d20260323
+torch_musa: 2.7.1
+musa_sdk:  4.3.5
+mudnn:     3.1.5
+image:     sh-harbor.mthreads.com/sets/sets_vllm_musa:musa_sdk_4.3.5_torch_2.7.1_fix_ray
+image_sha: c3ae44c3e6ee (本地拉于约 2 个月前)
+hardware:  MTT S5000 x 8
+host:      node165 (Ubuntu 22.04.5 LTS)
+model:     Qwen2.5-14B (/data/SETS-2.0-test/models/Qwen2.5-14B)
+tp:        8
+report_at: 2026-05-27

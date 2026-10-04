@@ -1,0 +1,801 @@
+# SPDX-License-Identifier: Apache-2.0
+# SPDX-FileCopyrightText: Copyright contributors to the vLLM project
+"""Code inside this file can safely assume musa platform, e.g. importing
+pymtml. However, it should not initialize musa context.
+"""
+
+import os
+from collections.abc import Callable
+from functools import cache, wraps
+from typing import TYPE_CHECKING, Any, TypeVar
+
+# isort: off
+import torchada  # noqa: F401
+import torch
+
+# isort: on
+from typing_extensions import ParamSpec
+from vllm.logger import init_logger
+from vllm.platforms.interface import DeviceCapability, Platform, PlatformEnum
+from vllm.v1.attention.backends.registry import AttentionBackendEnum, register_backend
+
+if TYPE_CHECKING:
+    from vllm.config import VllmConfig
+    from vllm.config.cache import CacheDType
+    from vllm.v1.attention.selector import AttentionSelectorConfig
+else:
+    VllmConfig = None
+    CacheDType = None
+
+import pymtml as pynvml
+
+logger = init_logger(__name__)
+
+_P = ParamSpec("_P")
+_R = TypeVar("_R")
+_QWEN3_MOE_FP8_MAX_CUDAGRAPH_CAPTURE_SIZE = 64
+
+
+def _is_qwen3_moe_fp8_model(model_config: Any | None) -> bool:
+    if model_config is None:
+        return False
+
+    hf_config = getattr(model_config, "hf_config", None)
+    architectures = getattr(model_config, "architectures", None)
+    if architectures is None and hf_config is not None:
+        architectures = getattr(hf_config, "architectures", None)
+    if not any("Qwen3Moe" in str(arch) for arch in architectures or ()):
+        return False
+
+    if getattr(model_config, "quantization", None) == "fp8":
+        return True
+
+    quantization_config = getattr(hf_config, "quantization_config", None)
+    if isinstance(quantization_config, dict):
+        return quantization_config.get("quant_method") == "fp8"
+
+    return False
+
+
+@cache
+def _get_backend_priorities(
+    use_mla: bool,
+    device_capability: DeviceCapability,
+    num_heads: int | None = None,
+) -> list[AttentionBackendEnum]:
+    """Get backend priorities with lazy import to avoid circular dependency."""
+    if use_mla:
+        return [
+            AttentionBackendEnum.FLASHMLA,
+            AttentionBackendEnum.TRITON_MLA,
+        ]
+    else:
+        return [
+            AttentionBackendEnum.FLASH_ATTN,
+            AttentionBackendEnum.TRITON_ATTN,
+            AttentionBackendEnum.TURBOQUANT,
+        ]
+
+
+def with_mtml_context(fn: Callable[_P, _R]) -> Callable[_P, _R]:
+    @wraps(fn)
+    def wrapper(*args: _P.args, **kwargs: _P.kwargs) -> _R:
+        pynvml.nvmlInit()
+        try:
+            return fn(*args, **kwargs)
+        finally:
+            # Note: We intentionally do NOT call nvmlShutdown() here because
+            # pymtml has a bug where nvmlInit() fails after nvmlShutdown()
+            # has been called. The library handles cleanup on process exit.
+            pass
+
+    return wrapper
+
+
+def register_attention_backends() -> None:
+    # Pre-register all attention backends
+    register_backend(
+        AttentionBackendEnum.FLASHMLA,
+        class_path="vllm_musa.v1.attention.backends.mla.flashmla.MUSAFlashMLABackend",
+    )
+    register_backend(
+        AttentionBackendEnum.FLASH_ATTN,
+        class_path="vllm_musa.v1.attention.backends.flash_attn.MUSAFlashAttentionBackend",
+    )
+    register_backend(
+        AttentionBackendEnum.TURBOQUANT,
+        class_path=(
+            "vllm_musa.v1.attention.backends.turboquant."
+            "MUSATurboQuantAttentionBackend"
+        ),
+    )
+    # MUSA-0094: tree drafting via a MUSA-routed TreeAttention backend
+    # (Triton unified_attention is already MUSA-patched; reshape_and_cache_flash
+    # is wired through fa_utils.reshape_and_cache_flash).
+    register_backend(
+        AttentionBackendEnum.TREE_ATTN,
+        class_path=(
+            "vllm_musa.v1.attention.backends.tree_attn.MUSATreeAttentionBackend"
+        ),
+    )
+
+
+class MUSAPlatformBase(Platform):
+    _enum = PlatformEnum.OOT  # Out-of-tree platform
+    device_name: str = "musa"
+    device_type: str = "musa"
+    dispatch_key: str = "MUSA"
+    ray_device_key: str = "GPU"
+    dist_backend: str = "mccl"  # MUSA's NCCL equivalent
+    device_control_env_var: str = "MUSA_VISIBLE_DEVICES"
+    ray_noset_device_env_vars: list[str] = [
+        "RAY_EXPERIMENTAL_NOSET_MUSA_VISIBLE_DEVICES",
+    ]
+
+    @property
+    def supported_dtypes(self) -> list[torch.dtype]:
+        # MUSA GPUs support BF16 and FP16
+        return [torch.bfloat16, torch.float16, torch.float32]
+
+    def is_cuda_alike(self) -> bool:
+        """MUSA is CUDA-alike for compatibility purposes."""
+        return True
+
+    def is_musa(self) -> bool:
+        """This is the MUSA platform."""
+        return True
+
+    def is_sleep_mode_available(self) -> bool:
+        """MUSA supports sleep mode."""
+        return True
+
+    @classmethod
+    def import_ir_kernels(cls) -> None:
+        """Import upstream and MUSA-OOT IR-op providers.
+
+        Order matters: upstream first (registers `native` / `vllm_c` /
+        `oink` / etc.), then OOT MUSA providers so they appear in the
+        registry alongside upstream impls. Used by
+        `vllm.config.kernel.KernelConfig.set_priority()` to ensure
+        every provider mentioned in `ir_op_priority` is registered
+        before the dispatcher needs it.
+        """
+        super().import_ir_kernels()
+        try:
+            import vllm_musa.kernels  # noqa: F401
+        except ImportError as exc:
+            from vllm.logger import init_logger
+            init_logger(__name__).info(
+                "vllm_musa.kernels unavailable (%s); MUSA IR providers "
+                "will not be registered. Upstream providers remain "
+                "available.",
+                exc,
+            )
+
+    @classmethod
+    def get_default_ir_op_priority(cls, vllm_config):
+        """Platform-default priority list for vllm.ir.ops on MUSA.
+
+        When compiling with Inductor, prefer the `native` (pure-PyTorch)
+        IR impl; in the eager path, prefer the `musa` kernel provider.
+        This mirrors the upstream `cuda.py` pattern
+        (`default = ["native"] if using_inductor else ["vllm_c", "native"]`):
+        under Inductor the native rms_norm is a handful of
+        elementwise/reduction ops the compiler can fuse with its
+        neighbours, whereas a `torch.ops._C.*` custom op is an opaque
+        fusion barrier; in eager mode there is no fusion to lose so the
+        kernel provider is taken directly.
+
+        NOTE (MUSA-0057): this is a **correctness / upstream-consistency**
+        change, NOT a perf fix. MUSA-0057's controlled A/B/C bisect
+        proved there is no rms_norm-related perf regression on
+        MiniMax-M2.7 — `["native"]` and `["musa", "native"]` measure the
+        same batch1 throughput. An earlier revision of this docstring
+        claimed MUSA-0055 had measured a 20-56% regression caused by
+        this priority list; that delta was traced to a stale/anomalous
+        baseline measurement, not a real regression (see the MUSA-0057
+        ticket). The `musa` provider stays registered (see
+        `vllm_musa/kernels/musa_ops.py`) for the eager / explicit
+        opt-in path.
+        """
+        from vllm.config.compilation import CompilationMode
+        from vllm.config.kernel import IrOpPriorityConfig
+
+        cc = vllm_config.compilation_config
+        using_inductor = (
+            cc.backend == "inductor" and cc.mode != CompilationMode.NONE
+        )
+        if using_inductor:
+            # Let Inductor fuse the native reference impl. Keep the
+            # `musa` custom-op provider out of the priority here — it is
+            # a fusion barrier (no measurable batch1 effect per
+            # MUSA-0057, but native is the upstream-aligned default).
+            default = ["native"]
+            rms_norm = ["native"]
+        else:
+            # Eager path: no Inductor fusion to lose, so take the kernel.
+            default = ["musa", "native"]
+            rms_norm = ["musa", "native"]
+        return IrOpPriorityConfig.with_default(default, rms_norm=rms_norm)
+
+    @classmethod
+    def support_deep_gemm(cls) -> bool:
+        """
+        Returns if DeepGEMM is supported by the current platform.
+        """
+        return True
+
+    @classmethod
+    def set_device(cls, device: torch.device) -> None:
+        """
+        Set the device for the current platform.
+        """
+        torch.cuda.set_device(device)
+        # With this trick we can force the device to be set eagerly
+        # see https://github.com/pytorch/pytorch/issues/155668
+        # for why and when it is needed
+        _ = torch.zeros(1, device=device)
+
+    @classmethod
+    def manual_seed_all(cls, seed: int) -> None:
+        torch.musa.manual_seed_all(seed)
+
+    @classmethod
+    def get_device_capability(cls, device_id: int = 0) -> DeviceCapability | None:
+        raise NotImplementedError
+
+    @classmethod
+    def get_device_name(cls, device_id: int = 0) -> str:
+        raise NotImplementedError
+
+    @classmethod
+    def get_device_total_memory(cls, device_id: int = 0) -> int:
+        raise NotImplementedError
+
+    @classmethod
+    def is_fully_connected(cls, device_ids: list[int]) -> bool:
+        raise NotImplementedError
+
+    @classmethod
+    def log_warnings(cls):
+        pass
+
+    @classmethod
+    def apply_config_platform_defaults(cls, vllm_config: "VllmConfig") -> None:
+        # Ensure custom ops are enabled for MUSA platform so that
+        # OOT forward implementations (forward_oot) are dispatched.
+        # This must be set here (before VllmConfig.__post_init__ defaults)
+        # to prevent custom_ops from being defaulted to ['none'] when
+        # the inductor backend is active.
+        compilation_config = vllm_config.compilation_config
+        if all(s not in compilation_config.custom_ops for s in ("all", "none")):
+            compilation_config.custom_ops.append("all")
+
+        if (
+            compilation_config.max_cudagraph_capture_size is None
+            and compilation_config.cudagraph_capture_sizes is None
+            and _is_qwen3_moe_fp8_model(vllm_config.model_config)
+        ):
+            compilation_config.max_cudagraph_capture_size = (
+                _QWEN3_MOE_FP8_MAX_CUDAGRAPH_CAPTURE_SIZE
+            )
+            logger.info(
+                "Capping MUSA Qwen3 MoE FP8 cudagraph capture size to %d.",
+                compilation_config.max_cudagraph_capture_size,
+            )
+
+    @classmethod
+    def check_and_update_config(cls, vllm_config: "VllmConfig") -> None:
+        parallel_config = vllm_config.parallel_config
+        model_config = vllm_config.model_config
+
+        if parallel_config.worker_cls == "auto":
+            parallel_config.worker_cls = "vllm_musa.worker.MTGPUWorker"
+
+        cache_config = vllm_config.cache_config
+        if cache_config and cache_config.block_size is None:
+            cache_config.block_size = 16
+
+        # TODO(lucas): handle this more gracefully
+        # Note: model_config may be None during testing
+        # Note: block_size is initialized in
+        # HybridAttentionMambaModelConfig.verify_and_update_config
+        # for models with both attention and mamba,
+        # and doesn't need to be reinitialized here
+        if (
+            model_config is not None
+            and model_config.use_mla
+            and cache_config.block_size is not None
+        ):
+            use_sparse = hasattr(vllm_config.model_config.hf_config, "index_topk")
+            # If `--attention-config.backend` is not set and we are using MLA,
+            # then we default to FlashMLA backend.
+            use_flashmla = False
+            use_flashmla_sparse = False
+
+            from vllm_musa.v1.attention.ops.flashmla import is_flashmla_dense_supported
+
+            if vllm_config.attention_config.backend is None:
+                # Default case: use FlashMLA if supported
+                if is_flashmla_dense_supported()[0]:
+                    use_flashmla = True
+            else:
+                # Forced case
+                backend = vllm_config.attention_config.backend
+                use_flashmla = backend == AttentionBackendEnum.FLASHMLA
+                use_flashmla_sparse = backend == AttentionBackendEnum.FLASHMLA_SPARSE
+
+            if (
+                use_flashmla
+                and is_flashmla_dense_supported()[0]
+                and cache_config.block_size % 64 != 0
+            ):
+                cache_config.block_size = 64
+                logger.info("Forcing kv cache block size to 64 for FlashMLA backend.")
+
+            if use_sparse:
+                if not use_flashmla_sparse:
+                    use_flashmla_sparse = True
+
+                if use_flashmla_sparse and cache_config.block_size != 64:
+                    cache_config.block_size = 64
+                    logger.info(
+                        "Forcing kv cache block size to 64 for FlashMLASparse backend."
+                    )
+
+        scheduler_config = vllm_config.scheduler_config
+        # Note: model_config may be None during testing
+        if (
+            model_config is not None
+            and model_config.is_mm_prefix_lm
+            and scheduler_config.is_multimodal_model
+            and not scheduler_config.disable_chunked_mm_input
+        ):
+            logger.warning(
+                "Forcing --disable_chunked_mm_input for models "
+                "with multimodal-bidirectional attention."
+            )
+            scheduler_config.disable_chunked_mm_input = True
+
+        compilation_config = vllm_config.compilation_config
+        cudagraph_mode = getattr(compilation_config, "cudagraph_mode", None)
+        # MUSA-0076: the TP>2 cudagraph force-disable was added in
+        # MUSA-0061/0063 under the (incorrect) belief that "MCCL is
+        # incompatible with MUSA stream capture at the platform level".
+        # The actual root cause was that custom_all_reduce was disabled
+        # on torch >= 2.9 (MUSA-0069 gate), causing
+        # cuda_communicator.all_reduce to fall through to
+        # torch.distributed.all_reduce, whose MCCL ProcessGroup watchdog
+        # made CUDA API calls during the capture window. MUSA-0075 fixed
+        # the underlying CAR kernel-alignment issue and re-enabled CAR
+        # at TP>2 on torch 2.9; the dispatcher now hits ca_comm
+        # (captureable, stream-bound) instead of torch.distributed.
+        #
+        # However, on torch_musa 2.9.0, capturing graphs at LARGE shapes
+        # (>= ~232 tokens / 51-size default capture) triggers an
+        # `illegal memory access` at musa_graph.capture_end() — a
+        # separate torch_musa-side bug. Until that bug is fixed
+        # upstream, cap max_cudagraph_capture_size to a safe value so
+        # only the small (decode-relevant) graphs are captured. Single-
+        # batch decode only needs size=1 anyway.
+        # MUSA-0081: allow overriding the safe-cap via env var for
+        # spec-decode / Eagle3 perf experiments. Setting
+        # ``VLLM_MUSA_MAX_CUDAGRAPH_CAPTURE_SIZE`` overrides the default
+        # ``MUSA_SAFE_MAX_CUDAGRAPH_CAPTURE_SIZE=8``. Values up to 224
+        # have been observed working on torch_musa 2.9.0; values >= 232
+        # trigger MUSA-0082's illegal memory access at capture_end.
+        import os as _os
+        try:
+            MUSA_SAFE_MAX_CUDAGRAPH_CAPTURE_SIZE = int(
+                _os.getenv("VLLM_MUSA_MAX_CUDAGRAPH_CAPTURE_SIZE", "8")
+            )
+        except ValueError:
+            MUSA_SAFE_MAX_CUDAGRAPH_CAPTURE_SIZE = 8
+        if cudagraph_mode is not None:
+            from vllm.config import CUDAGraphMode
+            if cudagraph_mode != CUDAGraphMode.NONE:
+                max_size = compilation_config.max_cudagraph_capture_size or 0
+                if max_size > MUSA_SAFE_MAX_CUDAGRAPH_CAPTURE_SIZE:
+                    logger.warning(
+                        "MUSA-0076: capping max_cudagraph_capture_size "
+                        "from %d to %d (larger sizes trigger an illegal "
+                        "memory access at musa_graph.capture_end on "
+                        "torch_musa 2.9.0; investigation pending). "
+                        "Override with VLLM_MUSA_MAX_CUDAGRAPH_CAPTURE_SIZE.",
+                        max_size, MUSA_SAFE_MAX_CUDAGRAPH_CAPTURE_SIZE,
+                    )
+                    compilation_config.max_cudagraph_capture_size = (
+                        MUSA_SAFE_MAX_CUDAGRAPH_CAPTURE_SIZE
+                    )
+                    if compilation_config.cudagraph_capture_sizes:
+                        compilation_config.cudagraph_capture_sizes = [
+                            s for s in compilation_config.cudagraph_capture_sizes
+                            if s <= MUSA_SAFE_MAX_CUDAGRAPH_CAPTURE_SIZE
+                        ]
+
+    @classmethod
+    def get_current_memory_usage(
+        cls, device: torch.types.Device | None = None
+    ) -> float:
+        torch.cuda.empty_cache()
+        torch.cuda.reset_peak_memory_stats(device)
+        return torch.cuda.max_memory_allocated(device)
+
+    @classmethod
+    def get_valid_backends(
+        cls,
+        device_capability: DeviceCapability,
+        attn_selector_config: "AttentionSelectorConfig",
+        num_heads: int | None = None,
+    ) -> tuple[
+        list[tuple["AttentionBackendEnum", int]],
+        dict["AttentionBackendEnum", list[str]],
+    ]:
+        valid_backends_priorities = []
+        invalid_reasons = {}
+
+        backend_priorities = _get_backend_priorities(
+            attn_selector_config.use_mla,
+            device_capability,
+            num_heads,
+        )
+        for priority, backend in enumerate(backend_priorities):
+            try:
+                backend_class = backend.get_class()
+                invalid_reasons_i = backend_class.validate_configuration(
+                    device_capability=device_capability,
+                    **attn_selector_config._asdict(),
+                )
+            except ImportError:
+                invalid_reasons_i = ["ImportError"]
+            if invalid_reasons_i:
+                invalid_reasons[backend] = invalid_reasons_i
+            else:
+                valid_backends_priorities.append((backend, priority))
+
+        return valid_backends_priorities, invalid_reasons
+
+    @classmethod
+    def get_attn_backend_cls(
+        cls,
+        selected_backend: "AttentionBackendEnum",
+        attn_selector_config: "AttentionSelectorConfig",
+        num_heads: int | None = None,
+    ) -> str:
+        register_attention_backends()
+        device_capability = cls.get_device_capability()
+        assert device_capability is not None
+
+        attn_selector_config = attn_selector_config._replace(block_size=None)
+        # First try checking just the selected backend, if there is one.
+        if selected_backend is not None:
+            try:
+                backend_class = selected_backend.get_class()
+                invalid_reasons = backend_class.validate_configuration(
+                    device_capability=device_capability,
+                    **attn_selector_config._asdict(),
+                )
+            except ImportError:
+                invalid_reasons = ["ImportError"]
+            if invalid_reasons:
+                raise ValueError(
+                    f"Selected backend {selected_backend} is not valid for "
+                    f"this configuration. Reason: {invalid_reasons}"
+                )
+            else:
+                logger.info("Using %s backend.", selected_backend)
+                return selected_backend.get_path()
+
+        # No selected backend or the selected backend is invalid,
+        # so we try finding a valid backend.
+        valid_backends_priorities, invalid_reasons = cls.get_valid_backends(
+            device_capability=device_capability,
+            attn_selector_config=attn_selector_config,
+            num_heads=num_heads,
+        )
+        reasons_str = (
+            "{"
+            + ", ".join(
+                f"{backend.name}: [{', '.join(reasons)}]"
+                for backend, reasons in invalid_reasons.items()
+            )
+            + "}"
+        )
+        config_str = attn_selector_config.__repr__()
+        logger.debug_once(
+            f"Some attention backends are not valid for {cls.device_name} with "
+            f"{config_str}. Reasons: {reasons_str}."
+        )
+        if len(valid_backends_priorities) == 0:
+            raise ValueError(
+                f"No valid attention backend found for {cls.device_name} "
+                f"with {config_str}. Reasons: {reasons_str}."
+            )
+
+        # We have found some valid backends. Select the one with the
+        # highest priority.
+        sorted_indices = sorted(
+            range(len(valid_backends_priorities)),
+            key=lambda i: valid_backends_priorities[i][1],
+        )
+        selected_index = sorted_indices[0]
+        selected_backend = valid_backends_priorities[selected_index][0]
+        logger.info_once(
+            "Using %s attention backend out of potential backends: %s.",
+            selected_backend.name,
+            "[" + ", ".join(f"'{b[0].name}'" for b in valid_backends_priorities) + "]",
+            scope="local",
+        )
+
+        return selected_backend.get_path()
+
+    @classmethod
+    def get_supported_vit_attn_backends(cls) -> list["AttentionBackendEnum"]:
+        return [
+            AttentionBackendEnum.FLASH_ATTN,
+            AttentionBackendEnum.TRITON_ATTN,
+            AttentionBackendEnum.TORCH_SDPA,
+        ]
+
+    @classmethod
+    def get_vit_attn_backend(
+        cls,
+        head_size: int,
+        dtype: torch.dtype,
+        backend: "AttentionBackendEnum | None" = None,
+    ) -> "AttentionBackendEnum":
+        if backend is not None:
+            assert backend in cls.get_supported_vit_attn_backends(), (
+                f"Backend {backend} is not supported for vit attention. "
+                f"Supported backends are: {cls.get_supported_vit_attn_backends()}"
+            )
+            logger.info_once(f"Using backend {backend} for vit attention")
+            return backend
+
+        cc = cls.get_device_capability()
+        for vit_attn_backend in cls.get_supported_vit_attn_backends():
+            if vit_attn_backend == AttentionBackendEnum.TORCH_SDPA:
+                continue
+            try:
+                backend_class = vit_attn_backend.get_class()
+                is_backend_supported = backend_class.supports_head_size(
+                    head_size
+                ) and backend_class.supports_dtype(dtype)
+                if cc is not None:
+                    is_backend_supported = (
+                        is_backend_supported
+                        and backend_class.supports_compute_capability(cc)
+                    )
+                if is_backend_supported:
+                    logger.info_once(
+                        f"Using backend {vit_attn_backend} for vit attention"
+                    )
+                    return vit_attn_backend
+            except ImportError:
+                pass
+
+        return AttentionBackendEnum.TORCH_SDPA
+
+    @classmethod
+    def get_punica_wrapper(cls) -> str:
+        return "vllm.lora.punica_wrapper.punica_gpu.PunicaWrapperGPU"
+
+    @classmethod
+    def get_device_communicator_cls(cls) -> str:
+        return "vllm.distributed.device_communicators.cuda_communicator.CudaCommunicator"  # noqa
+
+    @classmethod
+    def supports_fp8(cls) -> bool:
+        return cls.has_device_capability((3, 1))
+
+    @classmethod
+    def use_custom_allreduce(cls) -> bool:
+        return True
+
+    @classmethod
+    def opaque_attention_op(cls) -> bool:
+        return True
+
+    @classmethod
+    def get_static_graph_wrapper_cls(cls) -> str:
+        return "vllm.compilation.cuda_graph.CUDAGraphWrapper"
+
+    @classmethod
+    def device_count(cls) -> int:
+        return torch.cuda.device_count()
+
+    @classmethod
+    def check_if_supports_dtype(cls, dtype: torch.dtype):
+        # MUSA devices support bfloat16 natively, no capability check needed.
+        pass
+
+    @classmethod
+    def insert_blocks_to_device(
+        cls,
+        src_cache: torch.Tensor,
+        dst_cache: torch.Tensor,
+        src_block_indices: torch.Tensor,
+        dst_block_indices: torch.Tensor,
+    ) -> None:
+        """Copy blocks from src_cache to dst_cache on GPU."""
+        _src_cache = src_cache[:, src_block_indices]
+        dst_cache[:, dst_block_indices] = _src_cache.to(dst_cache.device)
+
+    @classmethod
+    def swap_out_blocks_to_host(
+        cls,
+        src_cache: torch.Tensor,
+        dst_cache: torch.Tensor,
+        src_block_indices: torch.Tensor,
+        dst_block_indices: torch.Tensor,
+    ) -> None:
+        """Copy blocks from GPU to host (CPU)."""
+        _src_cache = src_cache[:, src_block_indices]
+        dst_cache[:, dst_block_indices] = _src_cache.cpu()
+
+    @classmethod
+    def support_hybrid_kv_cache(cls) -> bool:
+        return True
+
+    @classmethod
+    def support_static_graph_mode(cls) -> bool:
+        return True
+
+    @classmethod
+    def num_compute_units(cls, device_id=0):
+        return torch.cuda.get_device_properties(device_id).multi_processor_count
+
+
+# MTML utils
+# Note that MTML is not affected by `MUSA_VISIBLE_DEVICES`,
+# all the related functions work on real physical device ids.
+# the major benefit of using MTML is that it will not initialize MUSA
+class MtmlMUSAPlatform(MUSAPlatformBase):
+    @classmethod
+    @cache
+    @with_mtml_context
+    def get_device_capability(cls, device_id: int = 0) -> DeviceCapability | None:
+        try:
+            # XXX (MUSA): CUDA uses physical device ids (cls.device_id_to_physical_device_id(device_id)),
+            # but torch.musa.get_device_capability uses logical device ids when MUSA_VISIBLE_DEVICES is set.
+            # Since pymtml doesn't do remapping, so we can only use device_id here.
+            handle = pynvml.nvmlDeviceGetHandleByIndex(device_id)
+            major, minor = pynvml.nvmlDeviceGetCudaComputeCapability(handle)
+            return DeviceCapability(major=major, minor=minor)
+        except RuntimeError:
+            return None
+
+    @classmethod
+    @with_mtml_context
+    def has_device_capability(
+        cls,
+        capability: tuple[int, int] | int,
+        device_id: int = 0,
+    ) -> bool:
+        try:
+            return super().has_device_capability(capability, device_id)
+        except RuntimeError:
+            return False
+
+    @classmethod
+    @with_mtml_context
+    def get_device_name(cls, device_id: int = 0) -> str:
+        physical_device_id = cls.device_id_to_physical_device_id(device_id)
+        return cls._get_physical_device_name(physical_device_id)
+
+    @classmethod
+    @with_mtml_context
+    def get_device_uuid(cls, device_id: int = 0) -> str:
+        physical_device_id = cls.device_id_to_physical_device_id(device_id)
+        handle = pynvml.nvmlDeviceGetHandleByIndex(physical_device_id)
+        return pynvml.nvmlDeviceGetUUID(handle)
+
+    @classmethod
+    @with_mtml_context
+    def get_device_total_memory(cls, device_id: int = 0) -> int:
+        physical_device_id = cls.device_id_to_physical_device_id(device_id)
+        handle = pynvml.nvmlDeviceGetHandleByIndex(physical_device_id)
+        return int(pynvml.nvmlDeviceGetMemoryInfo(handle).total)
+
+    @classmethod
+    @with_mtml_context
+    def is_fully_connected(cls, physical_device_ids: list[int]) -> bool:
+        """
+        query if the set of gpus are fully connected by mtlink (1 hop)
+        """
+        handles = [pynvml.nvmlDeviceGetHandleByIndex(i) for i in physical_device_ids]
+        for i, handle in enumerate(handles):
+            for j, peer_handle in enumerate(handles):
+                if i < j:
+                    try:
+                        p2p_status = pynvml.nvmlDeviceGetP2PStatus(
+                            handle,
+                            peer_handle,
+                            pynvml.NVML_P2P_CAPS_INDEX_NVLINK,
+                        )
+                        if p2p_status != pynvml.NVML_P2P_STATUS_OK:
+                            return False
+                    except pynvml.NVMLError:
+                        logger.exception(
+                            "MtLink detection failed. This is normal if"
+                            " your machine has no MtLink equipped."
+                        )
+                        return False
+        return True
+
+    @classmethod
+    def _get_physical_device_name(cls, device_id: int = 0) -> str:
+        handle = pynvml.nvmlDeviceGetHandleByIndex(device_id)
+        return pynvml.nvmlDeviceGetName(handle)
+
+    @classmethod
+    @with_mtml_context
+    def log_warnings(cls):
+        device_ids: int = pynvml.nvmlDeviceGetCount()
+        if device_ids > 1:
+            device_names = [cls._get_physical_device_name(i) for i in range(device_ids)]
+            if (
+                len(set(device_names)) > 1
+                and os.environ.get("MUSA_DEVICE_ORDER") != "PCI_BUS_ID"
+            ):
+                logger.warning(
+                    "Detected different devices in the system: %s. Please"
+                    " make sure to set `MUSA_DEVICE_ORDER=PCI_BUS_ID` to "
+                    "avoid unexpected behavior.",
+                    ", ".join(device_names),
+                )
+
+
+class NonMtmlMUSAPlatform(MUSAPlatformBase):
+    @classmethod
+    @cache
+    def get_device_capability(cls, device_id: int = 0) -> DeviceCapability:
+        major, minor = torch.cuda.get_device_capability(device_id)
+        return DeviceCapability(major=major, minor=minor)
+
+    @classmethod
+    def get_device_name(cls, device_id: int = 0) -> str:
+        return torch.cuda.get_device_name(device_id)
+
+    @classmethod
+    def get_device_total_memory(cls, device_id: int = 0) -> int:
+        device_props = torch.cuda.get_device_properties(device_id)
+        return device_props.total_memory
+
+    @classmethod
+    def is_fully_connected(cls, physical_device_ids: list[int]) -> bool:
+        logger.exception(
+            "MtLink detection not possible, as context support was"
+            " not found. Assuming no MtLink available."
+        )
+        return False
+
+
+# Autodetect either MTML-enabled or non-MTML platform
+# based on whether MTML is available.
+mtml_available = False
+try:
+    try:
+        pynvml.nvmlInit()
+        mtml_available = True
+    except Exception:
+        # MTML may not be supported on all systems.
+        mtml_available = False
+finally:
+    # Note: We intentionally do NOT call nvmlShutdown() here because
+    # pymtml has a bug where nvmlInit() fails after nvmlShutdown()
+    # has been called. The library handles cleanup on process exit.
+    pass
+
+MUSAPlatform = MtmlMUSAPlatform if mtml_available else NonMtmlMUSAPlatform
+
+MUSAPlatform.log_warnings()
+
+__all__ = [
+    "MUSAPlatform",
+    "MUSAPlatformBase",
+    "MtmlMUSAPlatform",
+    "NonMtmlMUSAPlatform",
+    "mtml_available",
+    "with_mtml_context",
+]

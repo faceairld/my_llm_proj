@@ -1,0 +1,27 @@
+timestamp: 20260526_065339
+mode: our
+model_path: /data/SETS-2.0-test/models/Qwen2.5-14B
+tp: 8
+max_model_len: 32768
+port: 8001
+scenarios: long_context
+concurrency: 1
+requests: 8
+request_timeout: 120
+vllm_musa_impl: current
+vllm_musa_flash_attn: /usr/local/lib/python3.10/dist-packages/vllm_musa/v0/flash_attn.py
+vllm_musa_original_flash_attn: /data/_backup_to_local/vllm_musa_src/vllm_musa/v0/flash_attn.py
+vllm_musa_restore_after: 1
+DEBUG: 0
+ENABLE_PREFIX_CACHING: (由 MODE 决定)
+USE_CUSTOM_ALLREDUCE: (由 MODE 决定)
+GPU_MEM_UTIL: (由 MODE 决定)
+MAX_NUM_SEQS: (由 MODE 决定)
+ENFORCE_EAGER: (由 MODE 决定)
+container: node165
+started_at: 2026-05-26 06:53:39
+vllm_musa_flash_attn_sha256: 59eca2a1f30f928851af24713264023da3f32c104c1347bc180d6a75a52b21ca
+vllm_musa_flash_attn_has_codex: yes
+ended_at: 2026-05-26 06:55:27
+bench_elapsed: 30s
+bench_exit_code: 0

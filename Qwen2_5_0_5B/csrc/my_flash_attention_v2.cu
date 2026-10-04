@@ -4,6 +4,9 @@
 #include <cfloat>
 
 
+#define head_dim 64
+
+
 template <typename scalar_t> 
 __global__ void my_flash_attention(
     scalar_t *q,
@@ -26,9 +29,12 @@ __global__ void my_flash_attention(
     bool valid = (blockIdx.x * 32 + threadIdx.y) < q_seq_len;
     
     
-    __shared__ scalar_t q_mem[32][64];
-    __shared__ scalar_t k_mem[64][64];
-    __shared__ scalar_t v_mem[64][64];
+    __shared__ scalar_t q_mem[32][64 + 2];
+    __shared__ scalar_t k_mem[64][64 + 2];
+    __shared__ scalar_t v_mem[64][64 + 2];
+    // __shared__ scalar_t q_mem[32][64];
+    // __shared__ scalar_t k_mem[64][64];
+    // __shared__ scalar_t v_mem[64][64];
 
     // __shared__ float mim_data[16][2];
 

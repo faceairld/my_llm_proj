@@ -1,0 +1,63 @@
+(exl2_env) root@5b6a29ac2149:/home/gy/exllamav2/exllamav2# python test_inference.py -m /home/gy/Llama_3_1_8B_GPTQ_INT4/dir -p "Once upon a time," -t 128
+ -- Model: /home/gy/Llama_3_1_8B_GPTQ_INT4/dir
+ -- Options: []
+Loading: /home/gy/Llama_3_1_8B_GPTQ_INT4/dir ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 100% 0:00:03 0:00:00
+ -- Loaded model in 3.5130 seconds
+ -- Loading tokenizer...
+ -- Warmup...
+ -- Generating...
+
+Once upon a time, there was a beautiful princess named who the princess fell in love with him. They married and lived happily ever after.
+Once upon a time, there was a beautiful princess named who the princess fell in love with him. They married and lived happily ever after. She knew that was going to marry the princess was not the best choice.
+Once upon a time, there was a beautiful princess named who the princess fell in love with him. They married and lived happily ever after. She knew that was going to marry the princess was not the best choice. She still decided to marry him anyway.
+Once upon a time, there was a beautiful princess
+
+ -- Response generated in 2.87 seconds, 128 tokens, 44.68 tokens/second (includes prompt eval.)
+(exl2_env) root@5b6a29ac2149:/home/gy/exllamav2/exllamav2# python test_inference.py -m /home/gy/Llama_3_1_8B_GPTQ_INT4/dir -p "Once upon a time," -t 160
+ -- Model: /home/gy/Llama_3_1_8B_GPTQ_INT4/dir
+ -- Options: []
+Loading: /home/gy/Llama_3_1_8B_GPTQ_INT4/dir ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 100% 0:00:03 0:00:00
+ -- Loaded model in 3.5233 seconds
+ -- Loading tokenizer...
+ -- Warmup...
+ -- Generating...
+
+Once upon a time, a little girl named Lily went missing in a small town. As the investigation into her disappearance unfolds, the family of a previous victim shares their story with Detective Emilia.
+She promises her friend that they can play together as soon as the woman finishes her laundry.
+In 2014, The University of Maryland released a study on intimate partner violence. They reported the following statistics.
+She showed me how to braid my hair when I was 10.
+He never said he loved me, only that he wanted me.
+She remembers waking up in a foreign place, with no memory of how she got there.
+This writing prompt was about a non-linear narrative, where events are presented out of order. When the instructions for the prompt asked to include 3 "triggering statements" about domestic violence,
+
+ -- Response generated in 3.28 seconds, 160 tokens, 48.80 tokens/second (includes prompt eval.)
+(exl2_env) root@5b6a29ac2149:/home/gy/exllamav2/exllamav2# python test_inference.py -m /home/gy/Llama_3_1_8B_GPTQ_INT4/dir -p "Once upon a time," -t 192
+ -- Model: /home/gy/Llama_3_1_8B_GPTQ_INT4/dir
+ -- Options: []
+Loading: /home/gy/Llama_3_1_8B_GPTQ_INT4/dir ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 100% 0:00:03 0:00:00
+ -- Loaded model in 3.5103 seconds
+ -- Loading tokenizer...
+ -- Warmup...
+ -- Generating...
+
+Once upon a time, in a land far, far away, there was a beautiful fairy named Lily. Lily lived in a magical forest, surrounded by tall trees, sparkling streams, and vibrant wildflowers. She had delicate wings, a kind heart, and a love for adventure.
+One day, while exploring the forest, Lily stumbled upon a hidden clearing. In the center of the clearing stood an enormous, ancient tree, its branches twisted and gnarled with age. The tree seemed to be calling to her, and Lily felt an inexplicable pull to explore it.
+As she approached the tree, she noticed that its trunk was covered in intricately carved symbols. Lily's curiosity was piqued, and she gently touched the symbols with her fairy fingers. To her surprise, the tree began to glow with a soft, ethereal light.
+The light grew brighter, and Lily felt herself being drawn into the tree. She passed through the trunk, finding herself in a cozy,
+
+ -- Response generated in 3.56 seconds, 192 tokens, 53.90 tokens/second (includes prompt eval.)
+(exl2_env) root@5b6a29ac2149:/home/gy/exllamav2/exllamav2# python test_inference.py -m /home/gy/Llama_3_1_8B_GPTQ_INT4/dir -p "Once upon a time," -t 224
+ -- Model: /home/gy/Llama_3_1_8B_GPTQ_INT4/dir
+ -- Options: []
+Loading: /home/gy/Llama_3_1_8B_GPTQ_INT4/dir ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 100% 0:00:03 0:00:00
+ -- Loaded model in 3.5266 seconds
+ -- Loading tokenizer...
+ -- Warmup...
+ -- Generating...
+
+Once upon a time, I lived in a small town in England. We were proud of our history and the town was bustling with life. People would walk down the high street, waving at each other, and gossiping about the latest news. Our lives were simple, yet rich with stories to tell.
+In those days, our local pub was the heart of the community. It was somewhere people would gather together to share stories, have a pint, and enjoy live music. I remember sitting outside on a warm summer evening, watching children play, and feeling grateful for this sense of belonging.
+As the years went by, things began to change. People moved away, and the pub struggled to stay afloat. I watched as families broke apart, and friendships dwindled. The once-thriving high street became quieter, and the empty streets were a reminder of what we had lost.
+But even though things changed, the town's spirit remained strong. The community came together to support each other, and slowly, new businesses and activities began to emerge. A group of artists set up a studio, showcasing their work in the old cinema. Local
+
+ -- Response generated in 3.95 seconds, 224 tokens, 56.67 tokens/second (includes prompt eval.

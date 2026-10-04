@@ -1,0 +1,35 @@
+[INFO] endpoint: http://127.0.0.1:8001/v1    model: qwen2.5-14b
+[INFO] requests/scenario=8    concurrencies=[1, 1]
+[INFO] vllm_musa_impl=current actual=patched sha256=59eca2a1f30f
+
+[33m━━━ long_context  (concurrency=1, requests=8) ━━━[0m
+  ✓ 8/8   wall=15.83s   失败=0
+  TTFT      avg=116ms  p50=86  p95=257  p99=319
+  TPOT      avg=14.5ms (decode 阶段单 token)
+  E2E       avg=1.98s   p50=1.95   p95=2.95
+  Tokens    in=5544   out=1037
+  Throughput  单请求avg=64.4 tok/s   [32m聚合=65.5 tok/s[0m
+  KV Cache    占用率(末态)=0.0%
+  排队等待    avg=0.8ms
+  GPU Mem 增量 (MiB/卡): [4, 8, 8, 8, 8, 8, 8, 8]
+
+[33m━━━ long_context  (concurrency=1, requests=8) ━━━[0m
+  ✓ 8/8   wall=15.79s   失败=0
+  TTFT      avg=94ms  p50=98  p95=100  p99=100
+  TPOT      avg=14.5ms (decode 阶段单 token)
+  E2E       avg=1.97s   p50=1.97   p95=2.96
+  Tokens    in=5544   out=1049
+  Throughput  单请求avg=65.8 tok/s   [32m聚合=66.4 tok/s[0m
+  KV Cache    占用率(末态)=0.0%
+  排队等待    avg=0.7ms
+  GPU Mem 增量 (MiB/卡): [0, 0, 0, 0, 0, 0, 0, 0]
+
+
+[1m======== Summary ========[0m
+scenario          cc    ok/N  wall(s)  TTFT(ms)  TPOT(ms)  agg tok/s  prefix%
+-----------------------------------------------------------------------------
+long_context       1   8/8      15.83       116      14.5       65.5        -
+long_context       1   8/8      15.79        94      14.5       66.4        -
+[INFO] 输出文本已写入 /data/my_vllm_test/runs/20260528_023928_our/bench.json.outputs.txt
+
+[INFO] 报告已写入 /data/my_vllm_test/runs/20260528_023928_our/bench.json

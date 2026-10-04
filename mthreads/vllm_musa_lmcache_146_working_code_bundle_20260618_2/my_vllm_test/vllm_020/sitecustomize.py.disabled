@@ -1,0 +1,170 @@
+"""Runtime compatibility patches for the vLLM MUSA test environment.
+
+This file is only active when /data/my_vllm_test/vllm_020 is placed at the
+front of PYTHONPATH. It avoids changing vLLM source files while working around
+torch_musa 2.9 behavior observed on S5000.
+"""
+
+try:
+    import sys
+    import types
+
+    import torch
+except Exception:
+    torch = None
+
+if torch is not None and hasattr(torch, "accelerator") and hasattr(torch, "musa"):
+    _orig_empty_cache = torch.accelerator.empty_cache
+    _orig_memory_stats = torch.accelerator.memory_stats
+    _orig_memory_reserved = torch.accelerator.memory_reserved
+    _orig_memory_allocated = torch.accelerator.memory_allocated
+    _orig_reset_peak_memory_stats = torch.accelerator.reset_peak_memory_stats
+    _orig_reset_accumulated_memory_stats = (
+        torch.accelerator.reset_accumulated_memory_stats
+    )
+    _orig_max_memory_allocated = torch.accelerator.max_memory_allocated
+    _orig_max_memory_reserved = torch.accelerator.max_memory_reserved
+
+    def _is_musa_allocator_assert(exc):
+        msg = str(exc)
+        return (
+            "Allocator for musa is not a DeviceAllocator" in msg
+            or "device_allocator INTERNAL ASSERT FAILED" in msg
+        )
+
+    def _musa_device_index(device=None):
+        if device is None:
+            return None
+        try:
+            return torch.device(device).index
+        except Exception:
+            return device
+
+    def _musa_safe_empty_cache(*args, **kwargs):
+        try:
+            return _orig_empty_cache(*args, **kwargs)
+        except RuntimeError as exc:
+            if _is_musa_allocator_assert(exc):
+                return torch.musa.empty_cache()
+            raise
+
+    def _musa_safe_memory_stats(device=None, *args, **kwargs):
+        try:
+            return _orig_memory_stats(device, *args, **kwargs)
+        except RuntimeError as exc:
+            if _is_musa_allocator_assert(exc):
+                return torch.musa.memory_stats(_musa_device_index(device))
+            raise
+
+    def _musa_safe_memory_reserved(device=None, *args, **kwargs):
+        try:
+            return _orig_memory_reserved(device, *args, **kwargs)
+        except RuntimeError as exc:
+            if _is_musa_allocator_assert(exc):
+                return torch.musa.memory_reserved(_musa_device_index(device))
+            raise
+
+    def _musa_safe_memory_allocated(device=None, *args, **kwargs):
+        try:
+            return _orig_memory_allocated(device, *args, **kwargs)
+        except RuntimeError as exc:
+            if _is_musa_allocator_assert(exc):
+                return torch.musa.memory_allocated(_musa_device_index(device))
+            raise
+
+    def _musa_safe_reset_peak_memory_stats(device=None, *args, **kwargs):
+        try:
+            return _orig_reset_peak_memory_stats(device, *args, **kwargs)
+        except RuntimeError as exc:
+            if _is_musa_allocator_assert(exc):
+                # vLLM only uses this reset for profiling counters. torch_musa
+                # 2.9 rejects the corresponding MUSA reset on S5000 as well.
+                return None
+            raise
+
+    def _musa_safe_reset_accumulated_memory_stats(device=None, *args, **kwargs):
+        try:
+            return _orig_reset_accumulated_memory_stats(device, *args, **kwargs)
+        except RuntimeError as exc:
+            if _is_musa_allocator_assert(exc):
+                return None
+            raise
+
+    def _musa_safe_max_memory_allocated(device=None, *args, **kwargs):
+        try:
+            return _orig_max_memory_allocated(device, *args, **kwargs)
+        except RuntimeError as exc:
+            if _is_musa_allocator_assert(exc):
+                return torch.musa.max_memory_allocated(_musa_device_index(device))
+            raise
+
+    def _musa_safe_max_memory_reserved(device=None, *args, **kwargs):
+        try:
+            return _orig_max_memory_reserved(device, *args, **kwargs)
+        except RuntimeError as exc:
+            if _is_musa_allocator_assert(exc):
+                return torch.musa.max_memory_reserved(_musa_device_index(device))
+            raise
+
+    torch.accelerator.empty_cache = _musa_safe_empty_cache
+    torch.accelerator.memory_stats = _musa_safe_memory_stats
+    torch.accelerator.memory_reserved = _musa_safe_memory_reserved
+    torch.accelerator.memory_allocated = _musa_safe_memory_allocated
+    torch.accelerator.reset_peak_memory_stats = _musa_safe_reset_peak_memory_stats
+    torch.accelerator.reset_accumulated_memory_stats = (
+        _musa_safe_reset_accumulated_memory_stats
+    )
+    torch.accelerator.max_memory_allocated = _musa_safe_max_memory_allocated
+    torch.accelerator.max_memory_reserved = _musa_safe_max_memory_reserved
+
+    if "flash_attn.ops.triton.rotary" not in sys.modules:
+        ops_mod = sys.modules.setdefault(
+            "flash_attn.ops", types.ModuleType("flash_attn.ops")
+        )
+        triton_mod = sys.modules.setdefault(
+            "flash_attn.ops.triton", types.ModuleType("flash_attn.ops.triton")
+        )
+        rotary_mod = types.ModuleType("flash_attn.ops.triton.rotary")
+
+        def apply_rotary(
+            x,
+            cos,
+            sin,
+            interleaved=False,
+            inplace=False,
+            conjugate=False,
+            *args,
+            **kwargs,
+        ):
+            if conjugate:
+                sin = -sin
+
+            origin_dtype = x.dtype
+            cos = cos.to(dtype=x.dtype, device=x.device)
+            sin = sin.to(dtype=x.dtype, device=x.device)
+
+            while cos.ndim < x.ndim - 1:
+                cos = cos.unsqueeze(0)
+                sin = sin.unsqueeze(0)
+            cos = cos.unsqueeze(-2)
+            sin = sin.unsqueeze(-2)
+
+            if interleaved:
+                x1 = x[..., ::2]
+                x2 = x[..., 1::2]
+                out = torch.stack((x1 * cos - x2 * sin, x2 * cos + x1 * sin), dim=-1)
+                out = out.flatten(-2)
+            else:
+                x1, x2 = torch.chunk(x, 2, dim=-1)
+                out = torch.cat((x1 * cos - x2 * sin, x2 * cos + x1 * sin), dim=-1)
+
+            out = out.to(origin_dtype)
+            if inplace:
+                x.copy_(out)
+                return x
+            return out
+
+        rotary_mod.apply_rotary = apply_rotary
+        sys.modules["flash_attn.ops.triton.rotary"] = rotary_mod
+        setattr(ops_mod, "triton", triton_mod)
+        setattr(triton_mod, "rotary", rotary_mod)

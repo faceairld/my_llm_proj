@@ -1,0 +1,2 @@
+{"kind":"vscode_pty_spawn","pid":0}
+{"kind":"vscode_pty_exit","exitCode":0}

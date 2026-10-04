@@ -1,0 +1,7 @@
+==PROF== Connected to process 34704 (E:\vscode\cuda_proj\SNN_proj1\cuda_pratice\RNSNorm\rnsnormal.exe)
+write file status :true
+==PROF== Disconnected from process 34704
+"ID","Process ID","Process Name","Host Name","Kernel Name","Context","Stream","Block Size","Grid Size","Device","CC","Section Name","Metric Name","Metric Unit","Metric Value"
+"0","34704","rnsnormal.exe","127.0.0.1","RNSnorm1(const __half *, __half *, int, int)","1","7","(16, 16, 1)","(180, 1, 1)","0","8.6","Command line profiler metrics","dram__throughput.avg.pct_of_peak_sustained_elapsed","%","79.20"
+"0","34704","rnsnormal.exe","127.0.0.1","RNSnorm1(const __half *, __half *, int, int)","1","7","(16, 16, 1)","(180, 1, 1)","0","8.6","Command line profiler metrics","l1tex__t_requests_pipe_lsu_mem_global_op_ld.sum","","131,072"
+"0","34704","rnsnormal.exe","127.0.0.1","RNSnorm1(const __half *, __half *, int, int)","1","7","(16, 16, 1)","(180, 1, 1)","0","8.6","Command line profiler metrics","sm__cycles_elapsed.avg","cycle","58,323.33"

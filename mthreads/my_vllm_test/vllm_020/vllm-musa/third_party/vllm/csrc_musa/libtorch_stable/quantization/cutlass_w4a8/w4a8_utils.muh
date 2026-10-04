@@ -1,0 +1,11 @@
+#pragma once
+
+#include <cstddef>
+#include "mutlass/numeric_types.h"
+
+namespace vllm::mutlass_w4a8_utils {
+
+bool unified_encode_int4b(mutlass::int4b_t const* in, mutlass::int4b_t* out,
+                          size_t num_int4_elems);
+
+}  // namespace vllm::mutlass_w4a8_utils

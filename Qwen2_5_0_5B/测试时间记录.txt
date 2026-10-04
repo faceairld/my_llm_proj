@@ -5,3 +5,18 @@ vllm: vLLM:158.53 tokens/s
 设置cuda graph：吞吐量基线: 70.65 tokens/s (耗时: 0.7078s)
 设置了prefill阶段的flash attention cuda算子注入：吞吐量基线: 78.83 tokens/s (耗时: 0.5626s)
 设置了prefill阶段的flash attention cuda v2算子注入（单warp执行QK优化了读写shared mem）：吞吐量基线: 82.41 tokens/s (耗时: 0.6068s)
+
+flash decoding 比对：
+1.设置了flash decoding attention cuda算子和正常decoding attention cuda算子注入（根据当前序列长度选择执行哪个算子）：82.04 tokens/s (耗时: 0.6095s), 87.20 tokens/s (耗时: 0.5734s), 82.03 tokens/s (耗时: 0.6095s), 81.36 tokens/s (耗时: 0.6145s),
+    去掉最高值平均81.81tokens/s
+2.设置单flash decoding attention cuda算子注入：83.73 tokens/s (耗时: 0.5971s), 81.85 tokens/s (耗时: 0.6109s), 82.25 tokens/s (耗时: 0.6079s), 86.16 tokens/s (耗时: 0.5803s)
+    去掉最高值平均82.61tokens/s  
+3.设置正常的decoding attention cuda算子注入：83.26 tokens/s (耗时: 0.6005s), 86.64 tokens/s (耗时: 0.5771s), 84.44 tokens/s (耗时: 0.5921s), 88.96 tokens/s (耗时: 0.5621s)
+    去掉最高值平均84.78tokens/s  
+分析：在 ~300 这个序列长度下，normal decode 单 kernel + 512 线程 stride 遍历，每个线程就处理 1 个位置，一次搞定。Flash decoding 要启动两个 kernel 做同样的事，launch 开销在计算量这么小的时候占比就很明显了 
+
+在1的基础上尝试消除shared mem conflict：83.79 tokens/s (耗时: 0.5967s), 89.70 tokens/s (耗时: 0.5574s), 84.94 tokens/s (耗时: 0.5886s), 85.52 tokens/s (耗时: 0.5846s), 84.05 tokens/s (耗时: 0.5949s)
+    去掉最高值平均84.57tokens/s
+
+
+                      

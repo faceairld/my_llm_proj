@@ -698,8 +698,8 @@ int main(int argc, char* argv[]) {
     //checkCudaErrors(cudaMallocHost(&mem_A, (b_size * col * row) * sizeof(float)));
     //checkCudaErrors(cudaMallocHost(&mem_B, (b_size * col * row) * sizeof(float)));
     //392KB
-
     checkCudaErrors(cudaHostRegister(images.data(),images_byte,cudaHostRegisterDefault));
+
     checkCudaErrors(cudaMalloc(&d_mem_A,(b_size * col * row) * sizeof(float) ));//64*28*28
     checkCudaErrors(cudaMalloc(&d_mem_B,(b_size * col * row) * sizeof(float) ));//64*28*28
     //checkCudaErrors(cudaMemcpy(d_mem_A,mem_A,(b_size * col * row) * sizeof(float),cudaMemcpyHostToDevice));

@@ -1,0 +1,8 @@
+[console_scripts]
+vllm_collect_env = vllm_musa:collect_env
+
+[vllm.general_plugins]
+musa_custom_ops = vllm_musa:register_custom_ops
+
+[vllm.platform_plugins]
+musa = vllm_musa:musa_platform_plugin
